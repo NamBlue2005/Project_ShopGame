@@ -6,7 +6,7 @@ public class Users {
     private String email;
     private String phoneNumber;
     private String password;
-    private String type; // ADMIN hoặc USER
+    private String type;
 
     public Users(int userId, String username, String email, String phoneNumber, String password, String type) {
         this.userId = userId;
