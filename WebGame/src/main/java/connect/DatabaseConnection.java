@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class DatabaseConnection {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/game_store?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     private static final String JDBC_USERNAME = "root";
-    private static final String JDBC_PASSWORD = "Namblue2005@";
+    private static final String JDBC_PASSWORD = "15029";
 
     public static Connection getConnection() {
         Connection connection = null;
