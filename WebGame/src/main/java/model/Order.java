@@ -25,6 +25,17 @@ public class Order {
         this.paymentMethod = paymentMethod;
         this.discountId = discountId;
     }
+    public Order(int orderId, int userId, int gameAccountId, Timestamp orderDate, String orderStatus,
+                 double totalAmount, String paymentMethod, Integer discountId) {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.gameAccountId = gameAccountId;
+        this.orderDate = orderDate;
+        this.orderStatus = orderStatus;
+        this.totalAmount = totalAmount;
+        this.paymentMethod = paymentMethod;
+        this.discountId = discountId;
+    }
 
 
     // Getters and Setters
