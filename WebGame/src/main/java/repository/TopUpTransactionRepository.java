@@ -1,7 +1,7 @@
-package repository; // Đặt trong package repository
+package repository;
 
 import model.TopUpTransaction;
-import connect.DatabaseConnection; // Sử dụng class kết nối của bạn
+import connect.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;

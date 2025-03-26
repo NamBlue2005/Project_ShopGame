@@ -12,9 +12,6 @@ public class AdminRepository {
     private static final String SELECT_ALL_ORDERS = "SELECT * FROM ORDERS";
     private static final String SELECT_USER_BY_USERNAME_AND_PASSWORD = "SELECT * FROM Users WHERE username = ? AND type = 'ADMIN'";
     private static final String INSERT_ORDER = "INSERT INTO ORDERS (user_id, game_account_id, order_date, order_status, total_amount, payment_method, discount_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    //Xoa 2 cau truy van sau
-    private static final String UPDATE_ORDER = "UPDATE ORDERS SET user_id = ?, game_account_id = ?, order_date = ?, order_status = ?, total_amount = ?, payment_method = ?, discount_id = ? WHERE order_id = ?";
-    private static final String DELETE_ORDER = "DELETE FROM ORDERS WHERE order_id = ?";
     private static final String SELECT_ORDER_BY_ID = "SELECT * FROM ORDERS WHERE order_id = ?";
     private static final String FIND_ORDER = "select * from orders where order_id like ? and user_id like ?  and game_account_id like ? and  order_status like ? ";
 
@@ -44,7 +41,6 @@ public class AdminRepository {
                 orders.add(order);
             }
         } catch (SQLException e) {
-            // Xử lý ngoại lệ tốt hơn (log, ném custom exception, ...)
             e.printStackTrace();
             throw new RuntimeException("Error getting all orders", e);
         }
@@ -52,15 +48,14 @@ public class AdminRepository {
     }
 
     public static User getUserByUsernameAndPassword(String username, String password) {
-        User user = null; // Chỉ khai báo 1 lần
+        User user = null;
 
-        // Sử dụng try-with-resources
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_USERNAME_AND_PASSWORD)) {
 
             preparedStatement.setString(1, username);
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) { // ResultSet trong try riêng
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     String dbPassword = resultSet.getString("password");
                     if (password.equals(dbPassword)) {
@@ -76,19 +71,15 @@ public class AdminRepository {
             }
 
         } catch (SQLException e) {
-            // Xử lý ngoại lệ tốt hơn
             e.printStackTrace();
             throw new RuntimeException("Error getting user by username and password", e);
         }
         return user;
     }
 
-    //Giữ nguyên addOrder()
     public static void addOrder(Order order) throws SQLException {
         try (Connection connection = DatabaseConnection.getConnection();
-             // KeyHolder để lấy ID tự tăng
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ORDER, Statement.RETURN_GENERATED_KEYS)) {
-
             preparedStatement.setInt(1, order.getUserId());
             preparedStatement.setInt(2, order.getGameAccountId());
             preparedStatement.setTimestamp(3, order.getOrderDate());
@@ -103,7 +94,6 @@ public class AdminRepository {
             }
 
             preparedStatement.executeUpdate();
-            // Lấy ID tự tăng (quan trọng)
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     order.setOrderId(generatedKeys.getInt(1)); // Quan trọng: set ID vào object
@@ -116,8 +106,6 @@ public class AdminRepository {
             throw new SQLException(e);
         }
     }
-    //Xoa updateOrder
-    //Xoa deleteOrder
 
     public static Order getOrderById(int orderId) throws SQLException {
         Order order = null;
@@ -182,7 +170,7 @@ public class AdminRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Replace with proper exception handling
+            e.printStackTrace();
             throw new RuntimeException("Error searching orders", e);
 
         }

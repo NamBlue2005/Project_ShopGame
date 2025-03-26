@@ -38,7 +38,6 @@ public class DiscountController extends HttpServlet {
                 case "/admin/discounts/update":
                     showUpdateForm(request, response);
                     break;
-                //Xử lí delete bằng doGet()
                 case "/admin/discounts/delete":
                     deleteDiscountCode(request, response);
                     break;
@@ -49,7 +48,7 @@ public class DiscountController extends HttpServlet {
         } catch (SQLException ex) {
             request.setAttribute("message", "Database error: " + ex.getMessage());
             request.setAttribute("messageType", "danger");
-            request.getRequestDispatcher("/views/admin/error.jsp").forward(request,response); // Chuyển đến trang lỗi chung
+            request.getRequestDispatcher("/views/admin/error.jsp").forward(request,response);
         }
     }
 
@@ -65,18 +64,16 @@ public class DiscountController extends HttpServlet {
                 case "/admin/discounts/update":
                     updateDiscountCode(request, response);
                     break;
-                //Xóa delete bằng doPost
             }
         } catch (SQLException ex) {
             request.setAttribute("message", "Database error: " + ex.getMessage());
             request.setAttribute("messageType", "danger");
-            request.getRequestDispatcher("/views/admin/error.jsp").forward(request,response); // Chuyển đến trang lỗi chung
+            request.getRequestDispatcher("/views/admin/error.jsp").forward(request,response);
 
         }
     }
-    //list, search
     private void listDiscountCodes(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
-        // Lấy các tham số tìm kiếm (có thể null)
+
         String discountIdStr = request.getParameter("discountId");
         String code = request.getParameter("code");
         String discountType = request.getParameter("discountType");
@@ -90,7 +87,6 @@ public class DiscountController extends HttpServlet {
             }catch (NumberFormatException e){
                 request.setAttribute("message", "Invalid discount ID format.");
                 request.setAttribute("messageType", "danger");
-                //Không forward, render lại list luôn
                 request.getRequestDispatcher("/views/admin/discount_list.jsp").forward(request,response);
                 return;
             }
@@ -121,14 +117,11 @@ public class DiscountController extends HttpServlet {
             }
         }
 
-        // Gọi repository để tìm kiếm
         List<DiscountCode> discountCodes = DiscountRepository.findDiscountCodes(discountId, code, discountType, validFrom, validTo);
 
-        // Đặt kết quả vào request attribute
         request.setAttribute("discountCodes", discountCodes);
         request.setAttribute("param",request.getParameterMap()); // giữ lại các tham số
 
-        // Forward đến trang JSP để hiển thị
         request.getRequestDispatcher("/views/admin/discount_list.jsp").forward(request, response);
     }
 
@@ -137,7 +130,6 @@ public class DiscountController extends HttpServlet {
     }
 
     private void addDiscountCode(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
-        // Lấy dữ liệu từ form
         String code = request.getParameter("code");
         String discountType = request.getParameter("discountType");
         String discountValueStr = request.getParameter("discountValue");
@@ -145,7 +137,6 @@ public class DiscountController extends HttpServlet {
         String validToStr = request.getParameter("validTo");
         String usageLimitStr = request.getParameter("usageLimit");
 
-        // Validate dữ liệu (server-side)
         if (code == null || code.trim().isEmpty() || discountType == null || discountType.trim().isEmpty() ||
                 discountValueStr == null || discountValueStr.trim().isEmpty() || validFromStr == null || validFromStr.trim().isEmpty() ||
                 validToStr == null || validToStr.trim().isEmpty() || usageLimitStr == null || usageLimitStr.trim().isEmpty()) {
@@ -154,7 +145,7 @@ public class DiscountController extends HttpServlet {
             showAddForm(request, response); // Hiển thị lại form, kèm thông báo lỗi
             return;
         }
-        //validate code
+
         if(!DiscountRepository.isCodeUnique(code)){
             request.setAttribute("message","Code already exit");
             request.setAttribute("messageType", "danger");
@@ -208,7 +199,7 @@ public class DiscountController extends HttpServlet {
         if (validTo.before(validFrom)) {
             request.setAttribute("message", "'Valid to' date must be after 'valid from' date.");
             request.setAttribute("messageType", "danger");
-            showAddForm(request, response); // Show form again with error
+            showAddForm(request, response);
             return;
         }
 
@@ -228,16 +219,15 @@ public class DiscountController extends HttpServlet {
             return;
         }
 
-        // Tạo đối tượng DiscountCode
+
         DiscountCode newDiscountCode = new DiscountCode(code, discountType, discountValue, validFrom, validTo, usageLimit, 0);
 
-        // Gọi repository để thêm
+
         try {
             DiscountRepository.addDiscountCode(newDiscountCode);
             request.setAttribute("message", "Discount code added successfully! ID: " + newDiscountCode.getDiscountId());
             request.setAttribute("messageType", "success");
-            // showAddForm(request,response); //Ở lại trang
-            listDiscountCodes(request, response); // Về trang danh sách
+            listDiscountCodes(request, response);
 
         } catch (SQLException e) {
             request.setAttribute("message", "Database error: " + e.getMessage());
@@ -252,7 +242,7 @@ public class DiscountController extends HttpServlet {
         if(discountIdStr == null || discountIdStr.trim().isEmpty()){
             request.setAttribute("message","Discount ID is required");
             request.setAttribute("messageType", "danger");
-            listDiscountCodes(request,response); //Quay về trang list, báo lỗi
+            listDiscountCodes(request,response);
             return;
         }
         int discountId;
@@ -269,7 +259,7 @@ public class DiscountController extends HttpServlet {
         if (discountCode == null) {
             request.setAttribute("message", "Discount code not found.");
             request.setAttribute("messageType", "danger");
-            listDiscountCodes(request, response); // Quay về trang list, báo lỗi
+            listDiscountCodes(request, response);
         } else {
             request.setAttribute("discountCode", discountCode);
             request.getRequestDispatcher("/views/admin/discount_update.jsp").forward(request, response);
@@ -278,7 +268,6 @@ public class DiscountController extends HttpServlet {
 
 
     private void updateDiscountCode(HttpServletRequest request, HttpServletResponse response) throws  IOException, ServletException, SQLException {
-        // Lấy dữ liệu từ form
         String discountIdStr = request.getParameter("discountId");
         String code = request.getParameter("code");
         String discountType = request.getParameter("discountType");
@@ -292,7 +281,7 @@ public class DiscountController extends HttpServlet {
                 validToStr == null || validToStr.trim().isEmpty() || usageLimitStr == null || usageLimitStr.trim().isEmpty()) {
             request.setAttribute("message", "All fields are required.");
             request.setAttribute("messageType", "danger");
-            showUpdateForm(request, response); // Hiển thị lại form, kèm thông báo lỗi và giá trị cũ
+            showUpdateForm(request, response);
             return;
         }
 
@@ -307,11 +296,10 @@ public class DiscountController extends HttpServlet {
             return;
         }
 
-        //validate code
         if(!DiscountRepository.isCodeUnique(code, discountId)){ // truyền thêm discountId để bỏ qua chính nó
             request.setAttribute("message","Code already exit");
             request.setAttribute("messageType", "danger");
-            showUpdateForm(request,response); //Hiển thị form update
+            showUpdateForm(request,response);
             return;
         }
 
@@ -321,14 +309,14 @@ public class DiscountController extends HttpServlet {
             if("percentage".equals(discountType) && (discountValue <=0 || discountValue >100)){
                 request.setAttribute("message", "Invalid discount value. For percentage, it must be between 0 and 100.");
                 request.setAttribute("messageType", "danger");
-                showUpdateForm(request, response); //Hiển thị form update
+                showUpdateForm(request, response);
                 return;
 
             }
             if("fixed".equals(discountType) && discountValue <=0){
                 request.setAttribute("message","Invalid discount value. For fixed amount, it must be positive number");
                 request.setAttribute("messageType","danger");
-                showUpdateForm(request,response); //Hiển thị form update
+                showUpdateForm(request,response);
                 return;
             }
 
@@ -381,7 +369,6 @@ public class DiscountController extends HttpServlet {
             return;
         }
 
-        // Lấy đối tượng DiscountCode cũ để lấy timesUsed (không cho sửa trường này)
         DiscountCode oldDiscountCode = DiscountRepository.getDiscountCodeById(discountId);
         if (oldDiscountCode == null) {
             request.setAttribute("message", "Discount code not found.");
@@ -390,16 +377,14 @@ public class DiscountController extends HttpServlet {
             return;
         }
 
-        // Tạo đối tượng DiscountCode mới
         DiscountCode updatedDiscountCode = new DiscountCode(code, discountType, discountValue, validFrom, validTo, usageLimit, oldDiscountCode.getTimesUsed());
         updatedDiscountCode.setDiscountId(discountId);
 
-        // Gọi repository
         try {
             DiscountRepository.updateDiscountCode(updatedDiscountCode);
             request.setAttribute("message", "Discount code updated successfully!");
             request.setAttribute("messageType", "success");
-            listDiscountCodes(request, response); // Về trang danh sách
+            listDiscountCodes(request, response);
         } catch (SQLException e) {
             request.setAttribute("message", "Database error: " + e.getMessage());
             request.setAttribute("messageType", "danger");
@@ -411,7 +396,7 @@ public class DiscountController extends HttpServlet {
         if(discountIdStr == null || discountIdStr.trim().isEmpty()){
             request.setAttribute("message", "Discount ID is required to delete.");
             request.setAttribute("messageType", "danger");
-            listDiscountCodes(request, response);  // Quay về trang list, hiện thông báo
+            listDiscountCodes(request, response);
             return;
         }
         int discountId;
@@ -420,7 +405,7 @@ public class DiscountController extends HttpServlet {
         } catch (NumberFormatException e) {
             request.setAttribute("message", "Invalid Discount ID format.");
             request.setAttribute("messageType", "danger");
-            listDiscountCodes(request, response);  // Quay về trang list, hiện thông báo
+            listDiscountCodes(request, response);
             return;
         }
 
@@ -431,8 +416,7 @@ public class DiscountController extends HttpServlet {
         } catch (SQLException e) {
             request.setAttribute("message", "Error deleting discount code: " + e.getMessage());
             request.setAttribute("messageType", "danger");
-            // Bạn có thể log lỗi ở đây: e.printStackTrace();
         }
-        listDiscountCodes(request, response); // Quay về trang list sau khi xóa (hoặc không xóa được)
+        listDiscountCodes(request, response);
     }
 }

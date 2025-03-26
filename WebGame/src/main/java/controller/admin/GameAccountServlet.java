@@ -44,13 +44,13 @@ public class GameAccountServlet extends HttpServlet {
 
         try {
             switch (path) {
-                // Không còn case /add và /edit cho GET nữa
+
                 case "/admin/game-accounts/delete":
                     deleteGameAccount(request, response);
                     break;
                 case "/admin/game-accounts":
                 default:
-                    // Chỉ còn hiển thị danh sách/tìm kiếm
+
                     listGameAccounts(request, response);
                     break;
             }
@@ -71,10 +71,10 @@ public class GameAccountServlet extends HttpServlet {
 
         try {
             switch (path) {
-                case "/admin/game-accounts/add": // Xử lý POST từ Add Modal
+                case "/admin/game-accounts/add":
                     addGameAccount(request, response);
                     break;
-                case "/admin/game-accounts/update": // Xử lý POST từ Edit Modal
+                case "/admin/game-accounts/update":
                     updateGameAccount(request, response);
                     break;
                 default:
@@ -86,9 +86,7 @@ public class GameAccountServlet extends HttpServlet {
         }
     }
 
-    // --- Các phương thức xử lý ---
 
-    // listGameAccounts không cần set viewMode nữa
     private void listGameAccounts(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("DEBUG: Executing listGameAccounts (Modal version)");
@@ -125,14 +123,11 @@ public class GameAccountServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    // addGameAccount, updateGameAccount, deleteGameAccount giữ nguyên logic xử lý POST/GET delete
-    // Nhưng không cần showEditView nữa.
-    // (Code các hàm add, update, delete, handleError... giữ nguyên như trước, chỉ cần đảm bảo chúng redirect đúng sau khi xử lý)
-    private void addGameAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      private void addGameAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("DEBUG: Processing addGameAccount (POST from Modal)");
         String message; String messageType;
         try {
-            String username = request.getParameter("accountUsername_add"); // Đổi tên input để tránh trùng lặp nếu cần
+            String username = request.getParameter("accountUsername_add");
             String password = request.getParameter("accountPassword_add");
             String rank = request.getParameter("gameRank_add");
             double currency = parseDoubleParameter(request, "inGameCurrency_add", 0.0);
@@ -140,7 +135,7 @@ public class GameAccountServlet extends HttpServlet {
             int skins = parseIntParameter(request, "numberOfSkins_add", 0);
             String status = request.getParameter("status_add");
 
-            GameAccount newAccount = new GameAccount(username, password /* hash */, rank, currency, champions, skins, status);
+            GameAccount newAccount = new GameAccount(username, password , rank, currency, champions, skins, status);
             int newId = gameAccountRepository.addGameAccount(newAccount);
 
             if (newId != -1) { message = "Thêm tài khoản thành công! ID = " + newId; messageType = "success"; }
@@ -153,11 +148,11 @@ public class GameAccountServlet extends HttpServlet {
         System.out.println("DEBUG: Processing updateGameAccount (POST from Modal)");
         String message; String messageType;
         try {
-            int id = parseIntParameter(request, "gameAccountId_edit", -1); // Lấy ID từ hidden input
+            int id = parseIntParameter(request, "gameAccountId_edit", -1);
             if (id == -1) throw new NumberFormatException("Missing or invalid gameAccountId_edit");
 
             String username = request.getParameter("accountUsername_edit");
-            String password = request.getParameter("accountPassword_edit"); // Check rỗng để không đổi
+            String password = request.getParameter("accountPassword_edit");
             String rank = request.getParameter("gameRank_edit");
             double currency = parseDoubleParameter(request, "inGameCurrency_edit", 0.0);
             int champions = parseIntParameter(request, "numberOfChampions_edit", 0);
@@ -196,8 +191,7 @@ public class GameAccountServlet extends HttpServlet {
         sendRedirectWithMessage(request, response, "/admin/game-accounts", message, messageType);
     }
 
-    // --- Hàm tiện ích (handleError, handleErrorRedirect, sendRedirectWithMessage, parseIntParameter, parseDoubleParameter) ---
-    // Giữ nguyên các hàm này như phiên bản trước
+
     private void handleError(HttpServletRequest request, HttpServletResponse response, String errorMessage, Exception e) throws ServletException, IOException {
         if (e != null) { System.err.println(errorMessage + ": " + e.getMessage()); e.printStackTrace(); }
         else { System.err.println(errorMessage); }
@@ -215,13 +209,13 @@ public class GameAccountServlet extends HttpServlet {
     private void sendRedirectWithMessage(HttpServletRequest request, HttpServletResponse response, String targetUrl, String message, String messageType) throws IOException {
         String encodedMessage = "";
         if (message != null && !message.isEmpty()) {
-            try { encodedMessage = URLEncoder.encode(message, "UTF-8"); } // Dùng "UTF-8" cho JDK < 10
+            try { encodedMessage = URLEncoder.encode(message, "UTF-8"); }
             catch (UnsupportedEncodingException e) { System.err.println("UTF-8 encoding not supported? Should not happen."); encodedMessage = "Error+encoding+message"; }
         }
         response.sendRedirect(request.getContextPath() + targetUrl + "?message=" + encodedMessage + "&messageType=" + messageType);
     }
 
-    private int parseIntParameter(HttpServletRequest request, String paramName, int defaultValue) { /* Giữ nguyên */
+    private int parseIntParameter(HttpServletRequest request, String paramName, int defaultValue) {
         String paramValue = request.getParameter(paramName);
         if (paramValue != null && !paramValue.trim().isEmpty()) {
             try { return Integer.parseInt(paramValue.trim()); }
@@ -229,7 +223,7 @@ public class GameAccountServlet extends HttpServlet {
         }
         return defaultValue;
     }
-    private double parseDoubleParameter(HttpServletRequest request, String paramName, double defaultValue) { /* Giữ nguyên */
+    private double parseDoubleParameter(HttpServletRequest request, String paramName, double defaultValue) {
         String paramValue = request.getParameter(paramName);
         if (paramValue != null && !paramValue.trim().isEmpty()) {
             try { return Double.parseDouble(paramValue.trim()); }

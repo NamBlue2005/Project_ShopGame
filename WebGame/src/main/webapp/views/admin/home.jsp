@@ -4,6 +4,6 @@
     <title>Title</title>
 </head>
 <body>
-
+<%--phần này thừa do lúc e khởi tạo file--%>
 </body>
 </html>

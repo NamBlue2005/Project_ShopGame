@@ -47,7 +47,7 @@
 <div class="container">
   <h1>Quản lý giao dịch nạp tiền</h1>
 
-  <%-- Thông báo (nếu có) --%>
+  <%-- Thông báo --%>
   <c:if test="${not empty message}">
     <div class="alert alert-${messageType} alert-dismissible fade show" role="alert">
         ${message}

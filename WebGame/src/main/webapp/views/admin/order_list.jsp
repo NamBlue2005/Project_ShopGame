@@ -103,7 +103,6 @@
             <th>Tổng tiền</th>
             <th>PT Thanh toán</th>
             <th>Discount ID</th>
-<%--            Xóa cột hành động--%>
         </tr>
         </thead>
         <tbody>
@@ -133,7 +132,6 @@
             </c:when>
             <c:otherwise>
                 <tr>
-                        <%--sửa colspan="8"--%>
                     <td colspan="8" class="text-center">Không tìm thấy đơn hàng nào.</td>
                 </tr>
             </c:otherwise>

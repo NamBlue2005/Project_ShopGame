@@ -14,12 +14,11 @@ import java.util.List;
 @WebServlet(name = "TopUpTransactionServlet", urlPatterns = "/admin/topup-transactions")
 public class TopUpTransactionServlet extends HttpServlet {
 
-    //private TopUpTransactionService topUpTransactionService = new TopUpTransactionService(); // Thay bằng Repository
     private TopUpTransactionRepository topUpTransactionRepository = new TopUpTransactionRepository();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Lấy các tham số tìm kiếm
+
         HttpSession session = request.getSession();
         Integer userIds = (Integer) session.getAttribute("userId");
         if (userIds == null) {
@@ -54,7 +53,7 @@ public class TopUpTransactionServlet extends HttpServlet {
             }
         }
 
-        // Gọi trực tiếp Repository
+
         List<TopUpTransaction> transactions = topUpTransactionRepository.findTopUpTransactions(transactionId, userId, status, paymentMethod);
 
         request.setAttribute("topUpTransactions", transactions);

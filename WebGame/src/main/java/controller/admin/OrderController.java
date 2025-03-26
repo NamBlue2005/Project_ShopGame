@@ -56,7 +56,7 @@ public class OrderController extends HttpServlet {
 
         List<Order> orders = AdminRepository.findOrders(orderId, userId, gameAccountId, orderStatus);
         request.setAttribute("orders", orders);
-        request.setAttribute("param", request.getParameterMap()); // Giữ lại các tham số tìm kiếm
+        request.setAttribute("param", request.getParameterMap());
         request.getRequestDispatcher("/views/admin/order_list.jsp").forward(request, response);
     }
 }

@@ -1,4 +1,4 @@
-package controller.admin; // Đặt đúng package
+package controller.admin;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

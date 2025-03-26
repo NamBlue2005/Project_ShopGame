@@ -30,7 +30,6 @@ public class DiscountRepository {
 
             preparedStatement.executeUpdate();
 
-            //Lấy ID
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     discountCode.setDiscountId(generatedKeys.getInt(1));
@@ -108,20 +107,19 @@ public class DiscountRepository {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     int count = resultSet.getInt(1);
-                    return count == 0; // Nếu count = 0, nghĩa là code chưa tồn tại (unique)
+                    return count == 0;
                 }
             }
         } catch (SQLException e){
             e.printStackTrace();
             throw  new SQLException(e);
         }
-        return false; // Default: coi như không unique để an toàn
+        return false;
     }
     public static boolean isCodeUnique(String code) throws SQLException{
         return isCodeUnique(code,null);
     }
 
-    // Tìm kiếm/lọc
     public static List<DiscountCode> findDiscountCodes(Integer discountId, String code, String discountType, Date validFrom, Date validTo) throws SQLException {
         List<DiscountCode> discountCodes = new ArrayList<>();
         StringBuilder queryBuilder = new StringBuilder(FIND_DISCOUNT_CODES);
@@ -168,7 +166,7 @@ public class DiscountRepository {
         }
         return discountCodes;
     }
-    //hàm con
+
     private static DiscountCode mapResultSetToDiscountCode(ResultSet resultSet) throws SQLException {
         DiscountCode discountCode = new DiscountCode();
         discountCode.setDiscountId(resultSet.getInt("discount_id"));
@@ -181,7 +179,7 @@ public class DiscountRepository {
         discountCode.setTimesUsed(resultSet.getInt("times_used"));
         return discountCode;
     }
-    //Lấy tất cả
+
     public static List<DiscountCode> getAllDiscountCodes() throws SQLException{
         return findDiscountCodes(null,null,null,null,null);
     }

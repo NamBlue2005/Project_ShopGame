@@ -128,9 +128,7 @@
   <%-- Bảng Danh Sách Tài Khoản --%>
   <h2>Danh sách tài khoản</h2>
   <div class="table-responsive">
-    <%-- Sử dụng table-striped và table-hover, bỏ table-bordered --%>
     <table class="table table-striped table-hover">
-      <%-- Áp dụng class .thead-gemini cho header --%>
       <thead class="thead-gemini">
       <tr>
         <th>ID</th>
@@ -160,7 +158,6 @@
               <td><c:out value="${account.numberOfChampions}" /></td>
               <td><c:out value="${account.numberOfSkins}" /></td>
               <td>
-                  <%-- Badge màu giữ nguyên để thể hiện trạng thái rõ ràng --%>
                 <span class="badge
                                     <c:choose>
                                         <c:when test="${account.status eq 'ACTIVE'}">bg-success</c:when>
@@ -172,8 +169,6 @@
                                 "><c:out value="${account.status}" /></span>
               </td>
               <td>
-                  <%-- Nút Sửa - Bao gồm data-password để xem/sửa trong modal --%>
-                  <%-- CẢNH BÁO: Truyền mật khẩu plain text vào HTML là KHÔNG AN TOÀN --%>
                 <button type="button" class="btn btn-warning btn-sm edit-btn"
                         data-bs-toggle="modal" data-bs-target="#editAccountModal"
                         data-account-id="${account.gameAccountId}"
@@ -187,7 +182,7 @@
                         title="Sửa">
                   <i class="fas fa-edit"></i>
                 </button>
-                  <%-- Nút Xóa (Giữ nguyên) --%>
+                  <%-- Nút Xóa  --%>
                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-account-id="${account.gameAccountId}" data-account-name="<c:out value="${account.accountUsername}"/>" title="Xóa">
                   <i class="fas fa-trash-alt"></i>
                 </button>
@@ -198,14 +193,12 @@
       </c:choose>
       </tbody>
     </table>
-  </div> <%-- End table-responsive --%>
+  </div>
 
-</div> <%-- End container --%>
+</div>
 
 
-<%-- ====================================================== --%>
 <%-- ==================== CÁC MODAL ======================= --%>
-<%-- ====================================================== --%>
 
 <div class="modal fade" id="addAccountModal" tabindex="-1" aria-labelledby="addAccountModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
