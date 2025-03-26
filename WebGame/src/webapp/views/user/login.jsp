@@ -27,10 +27,10 @@
 <div class="container mt-5">
     <div class="form-container">
         <h3 class="text-center">Đăng Nhập</h3>
-        <form action="login_process.jsp" method="POST">
+        <form action="login" method="POST">
             <div class="mb-3">
                 <label class="form-label">Email hoặc Số điện thoại</label>
-                <input type="text" class="form-control" name="email_or_phone" required>
+                <input type="text" class="form-control" name="email" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Mật khẩu</label>
