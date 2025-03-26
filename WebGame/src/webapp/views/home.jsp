@@ -50,8 +50,8 @@
         <a href="home.jsp" class="logo text-decoration-none text-white">Shop Liên Quân</a>
         <nav>
             <ul class="nav">
-                <li class="nav-item"><a href="login.jsp" class="nav-link">Đăng Nhập</a></li>
-                <li class="nav-item"><a href="register.jsp" class="nav-link">Đăng Ký</a></li>
+                <li class="nav-item"><a href="user/login.jsp" class="nav-link">Đăng Nhập</a></li>
+                <li class="nav-item"><a href="user/register.jsp" class="nav-link">Đăng Ký</a></li>
                 <li class="nav-item"><a href="#" class="nav-link">Nạp Tiền</a></li>
                 <li class="nav-item"><a href="#" class="nav-link">Tài Khoản Game</a></li>
             </ul>
