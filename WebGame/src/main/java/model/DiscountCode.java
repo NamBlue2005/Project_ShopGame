@@ -7,7 +7,7 @@ public class DiscountCode {
     private int discountId;
     private String code;
     private String discountType;
-    private double discountValue; // double thay vì BigDecimal
+    private double discountValue;
     private Date validFrom;
     private Date validTo;
     private int usageLimit;

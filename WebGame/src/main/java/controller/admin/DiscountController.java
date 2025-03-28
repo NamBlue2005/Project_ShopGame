@@ -97,7 +97,7 @@ public class DiscountController extends HttpServlet {
             try {
                 validFrom = Date.valueOf(validFromStr);
             } catch (IllegalArgumentException e) {
-                request.setAttribute("message", "Invalid 'valid from' date format.  Useരിയായ-MM-dd.");
+                request.setAttribute("message", "Invalid 'valid from' date format.  YYYY-MM-dd.");
                 request.setAttribute("messageType", "danger");
                 request.getRequestDispatcher("/views/admin/discount_list.jsp").forward(request, response);
                 return;

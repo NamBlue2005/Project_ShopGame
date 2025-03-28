@@ -33,7 +33,6 @@ public class GameAccount {
         this.price = price;
     }
 
-    // Constructors
     public GameAccount() {}
 
     public GameAccount(String accountUsername, String accountPassword, String gameRank, double inGameCurrency,
@@ -46,8 +45,6 @@ public class GameAccount {
         this.numberOfSkins = numberOfSkins;
         this.status = status;
     }
-
-    // Getters and Setters (bắt buộc)
 
     public int getGameAccountId() {
         return gameAccountId;
@@ -113,7 +110,6 @@ public class GameAccount {
         this.status = status;
     }
 
-    // toString()
     @Override
     public String toString() {
         return "GameAccount{" +

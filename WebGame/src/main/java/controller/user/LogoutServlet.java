@@ -1,4 +1,4 @@
-package controller.user; // Đặt cùng package với LoginServlet, UserProfileServlet
+package controller.user;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

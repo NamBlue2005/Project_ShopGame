@@ -56,11 +56,11 @@ public class UserServlet extends HttpServlet {
             if ("validationFailed".equals(request.getParameter("error"))) {
                 List<String> validationErrors = (List<String>) session.getAttribute("validationErrors");
                 if(validationErrors != null) {
-                    request.setAttribute("errors", validationErrors); // Đặt lỗi validation vào request để JSP hiển thị
+                    request.setAttribute("errors", validationErrors);
                     session.removeAttribute("validationErrors");
 
                 } else {
-                    request.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại."); // Lỗi chung nếu không thấy validationErrors
+                    request.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại.");
                 }
             } else {
                 request.setAttribute("error", error);

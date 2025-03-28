@@ -30,7 +30,7 @@ public class AdminLoginServlet extends HttpServlet {
             session.setAttribute("username", user.getUsername());
             session.setAttribute("userType", user.getType());
 
-            response.sendRedirect(request.getContextPath() + "/admin/dashboard"); // Bạn cần tạo trang này
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
         } else {
             request.setAttribute("errorMessage", "Invalid username, password, or not an admin.");
             request.getRequestDispatcher("views/admin/login.jsp").forward(request, response);

@@ -9,7 +9,6 @@ public class User {
     private String password;
     private String type;
 
-    // Constructors
     public User() {}
 
     public User(String username, String email, String phoneNumber, String password, String type) {

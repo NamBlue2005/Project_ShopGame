@@ -1,4 +1,4 @@
-package controller.admin; // Đảm bảo đúng package
+package controller.admin;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

@@ -2,7 +2,7 @@ package controller.user;
 
 import model.GameAccount;
 import repository.GameAccountRepository;
-import repository.UserRepository; // Repo để lấy thông tin user nếu cần
+import repository.UserRepository;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -36,7 +36,6 @@ public class PurchaseServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
 
         if (session == null || session.getAttribute("userId") == null) {
-            // Nếu chưa đăng nhập, chuyển hướng về trang login, lưu lại đích đến là purchase
             String accountIdParam = request.getParameter("accountId");
             String redirectParams = "?redirect=purchase";
             if (accountIdParam != null) {

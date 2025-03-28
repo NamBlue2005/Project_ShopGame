@@ -1,4 +1,4 @@
-package controller.user; // Đặt trong package controller.user
+package controller.user;
 
 import model.User;
 import repository.UserRepository;
