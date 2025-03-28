@@ -8,9 +8,9 @@ public class Order {
     private int gameAccountId;
     private Timestamp orderDate;
     private String orderStatus;
-    private double totalAmount;  // double thay vì BigDecimal
+    private double totalAmount;  
     private String paymentMethod;
-    private Integer discountId; // Integer (nullable)
+    private Integer discountId; 
 
 
     public Order() {}
@@ -38,7 +38,7 @@ public class Order {
     }
 
 
-    // Getters and Setters
+
 
     public int getOrderId() {
         return orderId;
@@ -103,7 +103,6 @@ public class Order {
     public void setDiscountId(Integer discountId) {
         this.discountId = discountId;
     }
-    //toString
 
     @Override
     public String toString() {
