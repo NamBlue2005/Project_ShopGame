@@ -14,7 +14,7 @@ public class AdminRepository {
     private static final String INSERT_ORDER = "INSERT INTO ORDERS (user_id, game_account_id, order_date, order_status, total_amount, payment_method, discount_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_ORDER_BY_ID = "SELECT * FROM ORDERS WHERE order_id = ?";
     private static final String FIND_ORDER = "select * from orders where order_id like ? and user_id like ?  and game_account_id like ? and  order_status like ? ";
-
+    private static final String SELECT_USER_BY_ID = "SELECT user_id, username, email, phone_number, type FROM Users WHERE user_id = ? AND type = 'ADMIN'";
 
 
     public static List<Order> getAllOrders() {
@@ -176,5 +176,28 @@ public class AdminRepository {
         }
         return orders;
     }
+    public static User getAdminUserById(int userId) {
+        User user = null;
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID)) {
 
+            preparedStatement.setInt(1, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    user = new User();
+                    user.setUserId(resultSet.getInt("user_id"));
+                    user.setUsername(resultSet.getString("username"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setPhoneNumber(resultSet.getString("phone_number"));
+                    // Quan trọng: Không lấy mật khẩu trừ khi thực sự cần
+                    user.setType(resultSet.getString("type"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Có thể throw RuntimeException hoặc Exception cụ thể hơn
+            throw new RuntimeException("Error getting admin user by ID", e);
+        }
+        return user;
+    }
 }

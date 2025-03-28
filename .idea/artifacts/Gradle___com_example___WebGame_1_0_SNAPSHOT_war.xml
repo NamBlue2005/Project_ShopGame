@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" external-system-id="GRADLE" name="Gradle : com.example : WebGame-1.0-SNAPSHOT.war">
+    <output-path>$PROJECT_DIR$/WebGame/build/libs</output-path>
+    <properties id="gradle-properties">
+      <options external-project-path="$PROJECT_DIR$/WebGame">
+        <buildTaskPath>:war</buildTaskPath>
+        <cleanTaskPath>:cleanWar</cleanTaskPath>
+      </options>
+    </properties>
+    <root id="archive" name="WebGame-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="Gradle : com.example : WebGame-1.0-SNAPSHOT.war (exploded)" />
+    </root>
+  </artifact>
+</component>

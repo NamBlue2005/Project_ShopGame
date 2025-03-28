@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component LANGUAGE_LEVEL="JDK_1_8" inheritJdk="true">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$/../../WebGame/src/main"/>
+	<lib name="Gradle: javax.servlet:javax.servlet-api:4.0.1" scope="PROVIDED"/>
+	<levels>
+		<level name="Gradle: javax.servlet:javax.servlet-api:4.0.1" value="project"/>
+		<level name="Gradle: javax.servlet:jstl:1.2" value="project"/>
+		<level name="Gradle: mysql:mysql-connector-java:8.0.28" value="project"/>
+		<level name="Gradle: com.google.protobuf:protobuf-java:3.11.4" value="project"/>
+	</levels>
+</component>
