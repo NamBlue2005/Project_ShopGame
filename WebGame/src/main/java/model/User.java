@@ -9,7 +9,6 @@ public class User {
     private String password;
     private String type;
 
-    // Constructors
     public User() {}
 
     public User(String username, String email, String phoneNumber, String password, String type) {
@@ -20,7 +19,7 @@ public class User {
         this.type = type;
     }
 
-    // Getters and Setters (bắt buộc)
+
     public int getUserId() {
         return userId;
     }
@@ -69,7 +68,7 @@ public class User {
         this.type = type;
     }
 
-    // toString() (tùy chọn, nhưng hữu ích)
+
     @Override
     public String toString() {
         return "User{" +
