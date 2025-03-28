@@ -25,7 +25,7 @@ import java.io.UnsupportedEncodingException;
 public class GameAccountServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private GameAccountRepository gameAccountRepository;
-    private static final String JSP_LIST_PATH = "/views/admin/gameAccountList.jsp"; // Consider /WEB-INF/
+    private static final String JSP_LIST_PATH = "/views/admin/gameAccountList.jsp"; 
 
     @Override
     public void init() {
@@ -131,7 +131,7 @@ public class GameAccountServlet extends HttpServlet {
             int champions = parseIntParameter(request, "numberOfChampions_add", 0);
             int skins = parseIntParameter(request, "numberOfSkins_add", 0);
             String status = request.getParameter("status_add");
-            double price = parseDoubleParameter(request, "price_add", 0.0); // Assume price_add
+            double price = parseDoubleParameter(request, "price_add", 0.0); 
 
             if (username == null || username.trim().isEmpty() || password == null || password.isEmpty() || status == null || status.isEmpty()) {
                 message = "Tên tài khoản, mật khẩu và trạng thái là bắt buộc.";
@@ -165,13 +165,13 @@ public class GameAccountServlet extends HttpServlet {
     private void updateGameAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String message = null;
         String messageType = "danger";
-        String redirectUrl = "/admin/game-accounts"; // Default redirect URL
+        String redirectUrl = "/admin/game-accounts"; 
         try {
             int id = parseIntParameter(request, "gameAccountId_edit", -1);
             if (id == -1) {
                 message = "Thiếu ID tài khoản để cập nhật.";
             } else {
-                redirectUrl = "/admin/game-accounts"; // Keep redirecting to list even if ID is found for now
+                redirectUrl = "/admin/game-accounts"; 
                 String username = request.getParameter("accountUsername_edit");
                 String password = request.getParameter("accountPassword_edit");
                 String rank = request.getParameter("gameRank_edit");
@@ -179,7 +179,7 @@ public class GameAccountServlet extends HttpServlet {
                 int champions = parseIntParameter(request, "numberOfChampions_edit", 0);
                 int skins = parseIntParameter(request, "numberOfSkins_edit", 0);
                 String status = request.getParameter("status_edit");
-                double price = parseDoubleParameter(request, "price_edit", -1.0); // Assume price_edit
+                double price = parseDoubleParameter(request, "price_edit", -1.0); 
 
                 if (username == null || username.trim().isEmpty() || password == null || password.isEmpty() || status == null || status.isEmpty()) {
                     message = "Tên tài khoản, mật khẩu và trạng thái là bắt buộc.";
