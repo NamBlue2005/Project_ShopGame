@@ -21,8 +21,8 @@ public class UserRepository {
     private static final String CHECK_EMAIL_EXISTS = "SELECT 1 FROM Users WHERE email = ? AND user_id != ? LIMIT 1";
     private static final String CHECK_EMAIL_EXISTS_ON_ADD = "SELECT 1 FROM Users WHERE email = ? LIMIT 1";
     private static final String SEARCH_USERS = "SELECT user_id, username, email, phone_number, type FROM Users WHERE " +
-            "(username LIKE ? OR email LIKE ? OR phone_number LIKE ?) " + // Tìm theo từ khóa chung
-            "AND (? IS NULL OR type = ?) " + // Lọc theo type nếu có
+            "(username LIKE ? OR email LIKE ? OR phone_number LIKE ?) " +
+            "AND (? IS NULL OR type = ?) " +
             "ORDER BY user_id ASC";
 
     public List<User> getAllUsers() {
@@ -36,7 +36,7 @@ public class UserRepository {
             }
         } catch (SQLException e) {
             System.err.println("Error getting all users: " + e.getMessage());
-            e.printStackTrace(); // Hoặc log lỗi bằng thư viện logging
+            e.printStackTrace(); 
         }
         return userList;
     }
@@ -68,7 +68,7 @@ public class UserRepository {
             ps.setString(1, username);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    user = mapResultSetToUserWithPassword(rs); // Dùng hàm map khác để lấy cả password
+                    user = mapResultSetToUserWithPassword(rs); 
                 }
             }
         } catch (SQLException e) {
@@ -106,7 +106,7 @@ public class UserRepository {
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPhoneNumber());
             ps.setString(4, user.getType());
-            ps.setInt(5, user.getUserId()); // Điều kiện WHERE
+            ps.setInt(5, user.getUserId()); 
 
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
@@ -153,7 +153,7 @@ public class UserRepository {
 
         } catch (SQLException e) {
 
-            if (e.getSQLState().startsWith("23")) { // Mã lỗi SQL state cho vi phạm ràng buộc
+            if (e.getSQLState().startsWith("23")) { 
                 System.err.println("Cannot delete user " + userId + " due to existing related records (e.g., orders).");
             } else {
                 System.err.println("Error deleting user " + userId + ": " + e.getMessage());
@@ -169,12 +169,12 @@ public class UserRepository {
              PreparedStatement ps = connection.prepareStatement(CHECK_USERNAME_EXISTS)) {
             ps.setString(1, username);
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.next(); // True nếu có bản ghi
+                return rs.next(); 
             }
         } catch (SQLException e) {
             System.err.println("Error checking username existence for " + username + ": " + e.getMessage());
             e.printStackTrace();
-            return true; // Trả về true khi lỗi để an toàn, ngăn việc tạo trùng
+            return true;
         }
     }
 
@@ -189,7 +189,7 @@ public class UserRepository {
             }
 
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.next(); // True nếu có bản ghi
+                return rs.next(); 
             }
         } catch (SQLException e) {
             System.err.println("Error checking email existence for " + email + ": " + e.getMessage());
@@ -209,19 +209,19 @@ public class UserRepository {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(SEARCH_USERS)) {
 
-            ps.setString(1, searchPattern); // Cho username LIKE ?
-            ps.setString(2, searchPattern); // Cho email LIKE ?
-            ps.setString(3, searchPattern); // Cho phone_number LIKE ?
+            ps.setString(1, searchPattern);
+            ps.setString(2, searchPattern); 
+            ps.setString(3, searchPattern);
 
-            // Xử lý tham số thứ 4 và 5 cho điều kiện type
+        
             if (typeFilter != null) {
-                ps.setString(4, typeFilter); // Tham số thứ 4: type = ?
-                ps.setString(5, typeFilter); // Tham số thứ 5: giá trị của type
+                ps.setString(4, typeFilter); 
+                ps.setString(5, typeFilter); 
             } else {
-                // Nếu không lọc theo type, đặt tham số thứ 4 là NULL để điều kiện (? IS NULL OR type = ?) thành true
-                // và tham số thứ 5 không quan trọng (có thể đặt là null hoặc giá trị bất kỳ)
+               
+               
                 ps.setNull(4, Types.VARCHAR);
-                ps.setNull(5, Types.VARCHAR); // Hoặc ps.setString(5, "");
+                ps.setNull(5, Types.VARCHAR); 
             }
 
 
@@ -251,8 +251,8 @@ public class UserRepository {
 
 
     private User mapResultSetToUserWithPassword(ResultSet rs) throws SQLException {
-        User user = mapResultSetToUser(rs); // Gọi hàm map cơ bản trước
-        user.setPassword(rs.getString("password")); // Thêm password
+        User user = mapResultSetToUser(rs);
+        user.setPassword(rs.getString("password"));
         return user;
     }
 
