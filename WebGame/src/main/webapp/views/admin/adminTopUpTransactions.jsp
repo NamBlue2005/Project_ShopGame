@@ -7,145 +7,195 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Quản lý giao dịch nạp tiền</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <title>Admin - Quản lý Giao dịch Nạp tiền</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   <style>
-    body { padding-top: 20px; }
+    body {
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .navbar .nav-link.active {
+      font-weight: bold;
+    }
+    .main-content {
+      flex: 1;
+      padding-top: 1.5rem;
+      padding-bottom: 3rem;
+    }
     .table th, .table td { vertical-align: middle; }
+    .card-header-button { text-decoration: none; color: inherit; }
+    /* === SỬA Ở ĐÂY: Thay var() bằng mã Hex === */
+    .card-header-button:hover {
+      color: #0d6efd; /* Mã màu Hex cho primary blue */
+    }
+    /* ======================================== */
+    footer { background-color: #e9ecef; }
+    .badge { min-width: 70px; display: inline-block; }
   </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Admin Panel</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/admin/dashboard">Home</a>
-        </li>
-      </ul>
+<%-- Include Navbar --%>
+<jsp:include page="navbar.jsp"></jsp:include>
 
-      <ul class="navbar-nav">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-user"></i> ${sessionScope.username} (ID: ${sessionScope.userId}, Type: ${sessionScope.userType})
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="$/admin/profile">Profile</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/adminLogin">Logout</a></li> <%-- Cũng nên dùng contextPath --%>
-          </ul>
-        </li>
-      </ul>
-    </div>
+<div class="container-xl main-content">
+
+  <%-- Tiêu đề trang --%>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Quản lý Giao dịch Nạp tiền</h2>
   </div>
-</nav>
 
-<div class="container">
-  <h1>Quản lý giao dịch nạp tiền</h1>
-
-  <%-- Thông báo --%>
+  <%-- Thông báo (Giữ nguyên) --%>
   <c:if test="${not empty message}">
-    <div class="alert alert-${messageType} alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
         ${message}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   </c:if>
-
-  <%-- Form tìm kiếm --%>
-  <div class="card mb-3">
-    <div class="card-header">
-      <h3>Tìm kiếm giao dịch</h3>
+  <c:if test="${not empty error}">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        ${error}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <div class="card-body">
-      <form action="${pageContext.request.contextPath}/admin/topup-transactions" method="get">
-        <div class="row g-3 align-items-center">
-          <div class="col-md">
-            <label for="searchTransactionId" class="form-label">ID Giao dịch</label>
-            <input type="number" class="form-control" name="transactionId" id="searchTransactionId" placeholder="Nhập ID" value="${param.transactionId}">
-          </div>
-          <div class="col-md">
-            <label for="searchUserId" class="form-label">ID Người dùng</label>
-            <input type="number" class="form-control" name="userId" id="searchUserId" placeholder="Nhập ID" value="${param.userId}">
-          </div>
-          <div class="col-md">
-            <label for="searchStatus" class="form-label">Trạng thái</label>
-            <select class="form-select" name="status" id="searchStatus">
-              <option value="" ${empty param.status ? 'selected' : ''}>Tất cả</option>
-              <option value="completed" ${param.status == 'completed' ? 'selected' : ''}>Completed</option>
-              <option value="pending" ${param.status == 'pending' ? 'selected' : ''}>Pending</option>
-              <option value="failed" ${param.status == 'failed' ? 'selected' : ''}>Failed</option>
-            </select>
-          </div>
-          <div class="col-md">
-            <label for="searchPaymentMethod" class="form-label">Phương thức</label>
-            <select class="form-select" name="paymentMethod" id="searchPaymentMethod">
-              <option value="" ${empty param.paymentMethod ? 'selected' : ''}>Tất cả</option>
-              <option value="ngân hàng" ${param.paymentMethod == 'ngân hàng' ? 'selected' : ''}>Ngân hàng</option>
-              <option value="Momo" ${param.paymentMethod == 'Momo' ? 'selected' : ''}>Momo</option>
-              <option value="thẻ cào" ${param.paymentMethod == 'thẻ cào' ? 'selected' : ''}>Thẻ cào</option>
-            </select>
-          </div>
+  </c:if>
+  <c:if test="${not empty errors}"> <%-- Hiển thị lỗi validation nếu có --%>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-circle me-2"></i><strong>Vui lòng kiểm tra lại thông tin nhập:</strong>
+      <ul class="mb-0 mt-2 validation-error-list" style="padding-left: 1.5rem;">
+        <c:forEach var="errMsg" items="${errors}">
+          <li>${errMsg}</li>
+        </c:forEach>
+      </ul>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </c:if>
 
-          <div class="col-md-auto align-self-end">
-            <button type="submit" class="btn btn-primary">Tìm</button>
-            <a href="${pageContext.request.contextPath}/admin/topup-transactions" class="btn btn-secondary">Xóa lọc</a>
+  <%-- Form tìm kiếm - Card có thể thu gọn (Giữ nguyên) --%>
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-light">
+      <a class="card-header-button d-flex justify-content-between align-items-center"
+         data-bs-toggle="collapse" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseSearch">
+        <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Bộ lọc / Tìm kiếm Giao dịch</h5>
+        <i class="fas fa-chevron-down collapse-icon"></i>
+      </a>
+    </div>
+    <div class="collapse" id="collapseSearch">
+      <div class="card-body p-3">
+        <form action="${pageContext.request.contextPath}/admin/topup-transactions" method="get">
+          <div class="row g-2 align-items-center">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+              <input type="number" class="form-control form-control-sm" name="transactionId" placeholder="ID Giao dịch" value="${param.transactionId}">
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+              <input type="number" class="form-control form-control-sm" name="userId" placeholder="ID Người dùng" value="${param.userId}">
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+              <select class="form-select form-select-sm" name="status">
+                <option value="" ${empty param.status ? 'selected' : ''}>-- Trạng thái --</option>
+                <option value="completed" ${param.status == 'completed' ? 'selected' : ''}>Completed</option>
+                <option value="pending" ${param.status == 'pending' ? 'selected' : ''}>Pending</option>
+                <option value="failed" ${param.status == 'failed' ? 'selected' : ''}>Failed</option>
+              </select>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+              <select class="form-select form-select-sm" name="paymentMethod">
+                <option value="" ${empty param.paymentMethod ? 'selected' : ''}>-- Phương thức TT --</option>
+                <option value="ngân hàng" ${param.paymentMethod == 'ngân hàng' ? 'selected' : ''}>Ngân hàng</option>
+                <option value="Momo" ${param.paymentMethod == 'Momo' ? 'selected' : ''}>Momo</option>
+                <option value="thẻ cào" ${param.paymentMethod == 'thẻ cào' ? 'selected' : ''}>Thẻ cào</option>
+              </select>
+            </div>
+            <div class="col-lg-auto col-md-12 ms-auto text-end">
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-search me-1"></i> Lọc
+              </button>
+              <a href="${pageContext.request.contextPath}/admin/topup-transactions" class="btn btn-outline-secondary btn-sm ms-1" title="Xóa bộ lọc">
+                <i class="fas fa-times"></i>
+              </a>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 
-  <%-- Bảng hiển thị danh sách --%>
-  <table class="table table-striped table-bordered">
-    <thead class="table-dark">
-    <tr>
-      <th>ID</th>
-      <th>User ID</th>
-      <th>Số tiền</th>
-      <th>Ngày giao dịch</th>
-      <th>Phương thức</th>
-      <th>Trạng thái</th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:choose>
-      <c:when test="${not empty topUpTransactions}">
-        <c:forEach items="${topUpTransactions}" var="transaction">
+  <%-- Bảng hiển thị danh sách (Giữ nguyên) --%>
+  <div class="card shadow-sm">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">Danh sách Giao dịch</h5>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover table-sm mb-0">
+          <thead class="table-dark">
           <tr>
-            <td>${transaction.transactionId}</td>
-            <td>${transaction.userId}</td>
-            <td><fmt:formatNumber value="${transaction.amount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
-            <td><fmt:formatDate value="${transaction.transactionDate}" pattern="dd/MM/yyyy HH:mm"/></td>
-            <td>${transaction.paymentMethod}</td>
-            <td>
-                            <span class="badge
-                                <c:choose>
-                                    <c:when test="${transaction.status == 'completed'}">bg-success</c:when>
-                                    <c:when test="${transaction.status == 'pending'}">bg-warning text-dark</c:when>
-                                    <c:when test="${transaction.status == 'failed'}">bg-danger</c:when>
-                                    <c:otherwise>bg-secondary</c:otherwise>
-                                </c:choose>
-                            ">${transaction.status}</span>
-            </td>
+            <th>ID</th>
+            <th>User ID</th>
+            <th>Số tiền</th>
+            <th>Ngày GD</th>
+            <th>Phương thức</th>
+            <th class="text-center">Trạng thái</th>
           </tr>
-        </c:forEach>
-      </c:when>
-      <c:otherwise>
-        <tr>
-          <td colspan="6" class="text-center">Không có giao dịch nào.</td>
-        </tr>
-      </c:otherwise>
-    </c:choose>
-    </tbody>
-  </table>
-</div>
+          </thead>
+          <tbody>
+          <%-- Logic hiển thị giữ nguyên --%>
+          <c:choose>
+            <c:when test="${not empty topUpTransactions}">
+              <c:forEach items="${topUpTransactions}" var="transaction">
+                <tr>
+                  <td>${transaction.transactionId}</td>
+                  <td>${transaction.userId}</td>
+                  <td class="text-end pe-3"><fmt:formatNumber value="${transaction.amount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                  <td><fmt:formatDate value="${transaction.transactionDate}" pattern="HH:mm dd/MM/yyyy"/></td>
+                  <td>${transaction.paymentMethod}</td>
+                  <td class="text-center">
+                                        <span class="badge rounded-pill
+                                            <c:choose>
+                                                <c:when test="${transaction.status == 'completed'}">text-bg-success</c:when>
+                                                <c:when test="${transaction.status == 'pending'}">text-bg-warning</c:when>
+                                                <c:when test="${transaction.status == 'failed'}">text-bg-danger</c:when>
+                                                <c:otherwise>text-bg-secondary</c:otherwise>
+                                            </c:choose>
+                                        ">${transaction.status}</span>
+                  </td>
+                </tr>
+              </c:forEach>
+            </c:when>
+            <c:otherwise>
+              <tr>
+                <td colspan="6" class="text-center fst-italic p-4">Không có giao dịch nào phù hợp.</td>
+              </tr>
+            </c:otherwise>
+          </c:choose>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div> <%-- End container --%>
+
+<%-- Footer (Giữ nguyên) --%>
+<footer class="py-3 mt-auto">
+  <div class="container text-center">
+    <small class="text-muted">&copy; ${currentYear} Game Store Admin Panel. All Rights Reserved.</small>
+  </div>
+</footer>
+<c:set var="currentYear"><jsp:useBean id="date" class="java.util.Date" /><fmt:formatDate value="${date}" pattern="yyyy" /></c:set>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<%-- Script Collapse (Giữ nguyên) --%>
+<script>
+  const collapseElement = document.getElementById('collapseSearch');
+  const collapseIcon = document.querySelector('a[href="#collapseSearch"] .collapse-icon');
+  if (collapseElement && collapseIcon) {
+    collapseElement.addEventListener('show.bs.collapse', () => { collapseIcon.classList.replace('fa-chevron-down','fa-chevron-up'); });
+    collapseElement.addEventListener('hide.bs.collapse', () => { collapseIcon.classList.replace('fa-chevron-up','fa-chevron-down'); });
+    if (collapseElement.classList.contains('show')) { collapseIcon.classList.replace('fa-chevron-down','fa-chevron-up'); }
+  }
+</script>
 </body>
 </html>
