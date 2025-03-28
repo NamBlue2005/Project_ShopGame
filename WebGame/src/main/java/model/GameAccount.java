@@ -11,6 +11,27 @@ public class GameAccount {
     private int numberOfChampions;
     private int numberOfSkins;
     private String status;
+    private double price;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public GameAccount(int gameAccountId, String accountUsername, String accountPassword, String gameRank, double inGameCurrency, int numberOfChampions, int numberOfSkins, String status, double price) {
+        this.gameAccountId = gameAccountId;
+        this.accountUsername = accountUsername;
+        this.accountPassword = accountPassword;
+        this.gameRank = gameRank;
+        this.inGameCurrency = inGameCurrency;
+        this.numberOfChampions = numberOfChampions;
+        this.numberOfSkins = numberOfSkins;
+        this.status = status;
+        this.price = price;
+    }
 
     // Constructors
     public GameAccount() {}
