@@ -13,7 +13,7 @@ public class DiscountRepository {
     private static final String UPDATE_DISCOUNT_CODE = "UPDATE DiscountCodes SET code = ?, discount_type = ?, discount_value = ?, valid_from = ?, valid_to = ?, usage_limit = ? WHERE discount_id = ?";
     private static final String DELETE_DISCOUNT_CODE = "DELETE FROM DiscountCodes WHERE discount_id = ?";
     private static final String SELECT_DISCOUNT_CODE_BY_ID = "SELECT * FROM DiscountCodes WHERE discount_id = ?";
-    private static final String FIND_DISCOUNT_CODES = "SELECT * FROM DiscountCodes WHERE 1=1"; // Mệnh đề WHERE 1=1 để dễ nối thêm điều kiện
+    private static final String FIND_DISCOUNT_CODES = "SELECT * FROM DiscountCodes WHERE 1=1"; 
     private static final String IS_CODE_UNIQUE = "SELECT COUNT(*) FROM DiscountCodes WHERE code = ?";
 
 
