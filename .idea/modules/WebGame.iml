@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="WebGame" external.linked.project.path="$MODULE_DIR$/../../WebGame" external.root.project.path="$MODULE_DIR$/../../WebGame" external.system.id="GRADLE" external.system.module.group="com.example" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../WebGame">
+      <excludeFolder url="file://$MODULE_DIR$/../../WebGame/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../WebGame/build" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

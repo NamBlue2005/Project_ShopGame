@@ -35,6 +35,7 @@
   </style>
 </head>
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Admin Panel</a>
@@ -54,16 +55,17 @@
             <i class="fas fa-user"></i> ${sessionScope.username} (ID: ${sessionScope.userId}, Type: ${sessionScope.userType})
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><a class="dropdown-item" href="$/admin/profile">Profile</a></li>
             <li><a class="dropdown-item" href="#">Settings</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/admin/logout">Logout</a></li>
+            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/adminLogin">Logout</a></li> <%-- Cũng nên dùng contextPath --%>
           </ul>
         </li>
       </ul>
     </div>
   </div>
 </nav>
+
 <div class="container">
   <h1>Quản lý tài khoản game</h1>
 
