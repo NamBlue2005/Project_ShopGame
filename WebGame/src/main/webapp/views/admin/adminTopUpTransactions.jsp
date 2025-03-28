@@ -27,11 +27,11 @@
     }
     .table th, .table td { vertical-align: middle; }
     .card-header-button { text-decoration: none; color: inherit; }
-    /* === SỬA Ở ĐÂY: Thay var() bằng mã Hex === */
+  
     .card-header-button:hover {
-      color: #0d6efd; /* Mã màu Hex cho primary blue */
+      color: #0d6efd; 
     }
-    /* ======================================== */
+  
     footer { background-color: #e9ecef; }
     .badge { min-width: 70px; display: inline-block; }
   </style>
