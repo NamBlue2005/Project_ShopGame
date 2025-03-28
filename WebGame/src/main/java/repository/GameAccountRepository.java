@@ -41,7 +41,7 @@ public class GameAccountRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Giữ lại để xem lỗi nếu có sự cố
+            e.printStackTrace();
         }
         return -1;
     }
@@ -172,17 +172,17 @@ public class GameAccountRepository {
         account.setPrice(rs.getDouble("price"));
         return account;
     }
-    //user
+   
     public List<GameAccount> findPublicAccounts(Integer accountId, String rank, Double minPrice, Double maxPrice, Integer minChampions, Integer minSkins) {
         List<GameAccount> accounts = new ArrayList<>();
-        // Câu lệnh SQL cơ bản
+       
         StringBuilder sqlBuilder = new StringBuilder(
                 "SELECT game_account_id, game_rank, number_of_champions, number_of_skins, price " +
-                        "FROM GameAccounts WHERE status = 'ACTIVE'" // Luôn lọc status='ACTIVE'
+                        "FROM GameAccounts WHERE status = 'ACTIVE'" 
         );
         List<Object> parameters = new ArrayList<>();
 
-        // --- Thêm điều kiện WHERE động ---
+       
         if (accountId != null && accountId > 0) {
             sqlBuilder.append(" AND game_account_id = ?");
             parameters.add(accountId);
@@ -224,12 +224,12 @@ public class GameAccountRepository {
                     account.setGameRank(rs.getString("game_rank"));
                     account.setNumberOfChampions(rs.getInt("number_of_champions"));
                     account.setNumberOfSkins(rs.getInt("number_of_skins"));
-                    account.setPrice(rs.getDouble("price")); // Cần cột price và model đã cập nhật
+                    account.setPrice(rs.getDouble("price"));
                     accounts.add(account);
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Nên dùng logger
+            e.printStackTrace(); 
         } catch (Exception ex){
             ex.printStackTrace();
         }
@@ -237,7 +237,7 @@ public class GameAccountRepository {
     }
     public boolean updateGameAccountuser(GameAccount account) {
         String sql = "UPDATE GameAccounts SET account_username = ?, account_password = ?, game_rank = ?, in_game_currency = ?, number_of_champions = ?, number_of_skins = ?, status = ?, price = ? WHERE game_account_id = ?";
-        try (Connection conn = DatabaseConnection.getConnection(); // Tự lấy connection
+        try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, account.getAccountUsername());
@@ -251,10 +251,10 @@ public class GameAccountRepository {
             ps.setInt(9, account.getGameAccountId());
 
             int affectedRows = ps.executeUpdate();
-            // Tự động commit nếu không có lỗi
+           
             return affectedRows > 0;
         } catch (SQLException e) {
-            e.printStackTrace(); // In lỗi
+            e.printStackTrace(); 
             return false;
         }
     }
