@@ -7,7 +7,7 @@ public class GameAccount {
     private String accountUsername;
     private String accountPassword;
     private String gameRank;
-    private double inGameCurrency; // double thay vì BigDecimal
+    private double inGameCurrency;
     private int numberOfChampions;
     private int numberOfSkins;
     private String status;
@@ -33,7 +33,7 @@ public class GameAccount {
         this.price = price;
     }
 
-    // Constructors
+
     public GameAccount() {}
 
     public GameAccount(String accountUsername, String accountPassword, String gameRank, double inGameCurrency,
@@ -47,7 +47,7 @@ public class GameAccount {
         this.status = status;
     }
 
-    // Getters and Setters (bắt buộc)
+
 
     public int getGameAccountId() {
         return gameAccountId;
@@ -113,7 +113,7 @@ public class GameAccount {
         this.status = status;
     }
 
-    // toString()
+
     @Override
     public String toString() {
         return "GameAccount{" +
