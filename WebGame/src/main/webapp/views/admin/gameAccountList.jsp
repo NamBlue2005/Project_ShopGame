@@ -127,7 +127,7 @@
         <table class="table table-striped table-hover table-sm mb-0">
           <thead class="table-dark">
           <tr>
-            <th hidden="hidden">ID</th>
+            <th>ID</th>
             <th>Username</th>
             <th>Rank</th>
             <th class="text-end">Tiền</th>
@@ -148,7 +148,7 @@
             <c:otherwise>
               <c:forEach var="account" items="${gameAccounts}">
                 <tr>
-                  <td hidden="hidden"><c:out value="${account.gameAccountId}" /></td>
+                  <td ><c:out value="${account.gameAccountId}" /></td>
                   <td><c:out value="${account.accountUsername}" /></td>
                   <td><c:out value="${account.gameRank}" /></td>
                   <td class="text-end pe-3"><fmt:formatNumber value="${account.inGameCurrency}" type="number" minFractionDigits="0" maxFractionDigits="2"/></td>

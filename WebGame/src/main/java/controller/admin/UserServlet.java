@@ -26,12 +26,11 @@ public class UserServlet extends HttpServlet {
         userRepository = new UserRepository();
     }
 
-    // --- HÀM KIỂM TRA SESSION ADMIN ---
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         return session != null && "ADMIN".equals(session.getAttribute("userType"));
     }
-    // --- ---
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -40,14 +39,11 @@ public class UserServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        // --- KIỂM TRA QUYỀN ADMIN ---
         if (!isAdmin(request)) {
             response.sendRedirect(request.getContextPath() + "/adminLogin?error=Unauthorized");
             return;
         }
-        // --- ---
 
-        // Lấy session để xử lý message/error từ redirect trước đó
         HttpSession session = request.getSession();
         String message = (String) session.getAttribute("message");
         if (message != null) {
@@ -56,25 +52,20 @@ public class UserServlet extends HttpServlet {
         }
         String error = (String) session.getAttribute("error");
         if (error != null) {
-            // Phân biệt lỗi validation với lỗi khác nếu cần
+
             if ("validationFailed".equals(request.getParameter("error"))) {
                 List<String> validationErrors = (List<String>) session.getAttribute("validationErrors");
                 if(validationErrors != null) {
                     request.setAttribute("errors", validationErrors); // Đặt lỗi validation vào request để JSP hiển thị
                     session.removeAttribute("validationErrors");
-                    // (Optional) Lấy dữ liệu form cũ nếu lưu trong session
-                    // User formData = (User) session.getAttribute("formData");
-                    // if (formData != null) {
-                    //     request.setAttribute("formData", formData);
-                    //     session.removeAttribute("formData");
-                    // }
+
                 } else {
                     request.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại."); // Lỗi chung nếu không thấy validationErrors
                 }
             } else {
-                request.setAttribute("error", error); // Lỗi thông thường khác
+                request.setAttribute("error", error);
             }
-            session.removeAttribute("error"); // Xóa key lỗi chung khỏi session
+            session.removeAttribute("error");
         }
 
 
@@ -85,26 +76,23 @@ public class UserServlet extends HttpServlet {
 
         try {
             switch (action) {
-                // case "add": // Không cần nữa, form trong modal
-                //     break;
-                // case "edit": // Không cần nữa, form trong modal
-                //     break;
+
                 case "delete":
-                    deleteUser(request, response); // Vẫn cần xử lý delete
-                    break;       // Quan trọng: break sau delete để không chạy listUsers ngay
+                    deleteUser(request, response);
+                    break;
                 case "search":
                     searchUsers(request, response);
                     break;
                 case "list":
                 default:
-                    listUsers(request, response); // Hiển thị danh sách (mặc định)
+                    listUsers(request, response);
                     break;
             }
         } catch (Exception e) {
             System.err.println("Error in UserServlet doGet: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("error", "Đã xảy ra lỗi hệ thống: " + e.getMessage());
-            listUsers(request, response); // Cố gắng hiển thị lại trang list với lỗi
+            listUsers(request, response);
         }
     }
 
@@ -115,14 +103,11 @@ public class UserServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        // --- KIỂM TRA QUYỀN ADMIN ---
         if (!isAdmin(request)) {
             response.sendRedirect(request.getContextPath() + "/adminLogin?error=Unauthorized");
             return;
         }
-        // --- ---
 
-        // Lấy session để dùng cho việc đặt message/error
         HttpSession session = request.getSession();
 
         String action = request.getParameter("action");
@@ -135,10 +120,10 @@ public class UserServlet extends HttpServlet {
         try {
             switch (action) {
                 case "save":
-                    insertUser(request, response); // Gọi hàm xử lý insert
+                    insertUser(request, response);
                     break;
                 case "update":
-                    updateUser(request, response); // Gọi hàm xử lý update
+                    updateUser(request, response);
                     break;
                 default:
                     session.setAttribute("error", "Hành động không được hỗ trợ.");
@@ -153,9 +138,6 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // --- Các phương thức xử lý nghiệp vụ ---
-
-    // listUsers, searchUsers: Giữ nguyên như trước
 
     private void listUsers(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -179,57 +161,63 @@ public class UserServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/views/admin/user-list.jsp"); // Đổi tên JSP
         dispatcher.forward(request, response);
     }
-
-
-    // showAddForm, showEditForm: Không cần nữa
-
-    // insertUser: Cập nhật xử lý lỗi validation
     private void insertUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        String username = request.getParameter("username").trim();
-        String email = request.getParameter("email").trim();
-        String phoneNumber = request.getParameter("phoneNumber").trim();
-        String password = request.getParameter("password");
-        String type = request.getParameter("type");
-
-        // --- Validation ---
-        List<String> errors = validateUserInput(username, email, password, 0);
-        if (!errors.isEmpty()) {
-            // *** THAY ĐỔI: Lưu lỗi vào session và redirect ***
-            session.setAttribute("validationErrors", errors);
-            // (Optional) Lưu dữ liệu form vào session để điền lại (khá phức tạp với modal sau redirect)
-            User formData = new User(username, email, phoneNumber, "", type); // Không lưu lại pass
-            session.setAttribute("formData", formData); // Lưu ý: JSP cần đọc và xử lý cái này nếu muốn điền lại
-
-            response.sendRedirect(request.getContextPath() + "/admin/users?error=validationFailed"); // Redirect về list
-            return; // Dừng xử lý
-        }
-        // --- Hết Validation ---
-
-        User newUser = new User(username, email, phoneNumber, password, type); // Dùng pass trực tiếp
+        boolean success = false; // Biến để kiểm tra thành công cuối cùng
 
         try {
-            if (userRepository.addUser(newUser)) {
+            // 1. Lấy dữ liệu từ form
+            String username = request.getParameter("username");
+            String email = request.getParameter("email");
+            String phoneNumber = request.getParameter("phoneNumber");
+            String password = request.getParameter("password");
+            String type = request.getParameter("type");
+
+            // 2. Kiểm tra cơ bản (chỉ kiểm tra không rỗng các trường bắt buộc)
+            if (username == null || username.trim().isEmpty() ||
+                    email == null || email.trim().isEmpty() ||
+                    password == null || password.isEmpty() || // Bỏ qua check độ dài ở đây
+                    type == null || type.trim().isEmpty())
+            {
+                session.setAttribute("error", "Vui lòng điền đầy đủ các trường bắt buộc (*).");
+                response.sendRedirect(request.getContextPath() + "/admin/users?error=missingFields");
+                return;
+            }
+
+            // 3. Tạo đối tượng User
+            User newUser = new User(username.trim(), email.trim(), (phoneNumber != null ? phoneNumber.trim() : null), password, type);
+
+            System.out.println("Attempting to add user (simplified): " + newUser.getUsername()); // Thêm log cơ bản
+            success = userRepository.addUser(newUser); // Gọi repository
+
+            // 5. Đặt thông báo dựa trên kết quả trả về từ repository
+            if (success) {
+                System.out.println("User added successfully: " + newUser.getUsername());
                 session.setAttribute("message", "Thêm người dùng '" + username + "' thành công!");
             } else {
-                session.setAttribute("error", "Thêm người dùng thất bại do lỗi không xác định."); // Lỗi chung
+                // Trường hợp repository trả về false mà không ném exception
+                System.err.println("repository.addUser returned false for user: " + newUser.getUsername());
+                session.setAttribute("error", "Thêm người dùng thất bại. Kiểm tra lại thông tin hoặc liên hệ quản trị viên.");
             }
-        } catch (Exception e) {
-            System.err.println("Error inserting user DB: " + e.getMessage());
-            e.printStackTrace();
-            session.setAttribute("error", "Lỗi cơ sở dữ liệu khi thêm người dùng.");
-        }
-        response.sendRedirect(request.getContextPath() + "/admin/users"); // Redirect về list sau khi xử lý
-    }
 
-    // updateUser: Cập nhật xử lý lỗi validation
+        } catch (Exception e) { // Bắt tất cả Exception, chủ yếu là SQLException từ repository
+            // Nếu có lỗi (ví dụ: trùng username/email trong DB, lỗi kết nối,...)
+            System.err.println("!!! Error inserting user DB (simplified): " + e.getMessage());
+            e.printStackTrace(); // Rất quan trọng: In chi tiết lỗi ra console server
+            // Đặt thông báo lỗi chung chung hơn
+            session.setAttribute("error", "Lỗi khi thêm người dùng. Nguyên nhân có thể do trùng tên đăng nhập/email hoặc lỗi hệ thống.");
+            // Không set biến success = false ở đây vì nó đã mặc định là false
+        }
+
+        // 6. Luôn redirect về trang danh sách
+        response.sendRedirect(request.getContextPath() + "/admin/users");
+    }
     private void updateUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String userIdParam = request.getParameter("userId");
-        int userId = -1; // Giá trị mặc định nếu parse lỗi
-
+        int userId = -1;
         try {
             userId = Integer.parseInt(userIdParam);
             String username = request.getParameter("username").trim();
@@ -238,26 +226,23 @@ public class UserServlet extends HttpServlet {
             String password = request.getParameter("password");
             String type = request.getParameter("type");
 
-            // --- Validation ---
+
             List<String> errors = validateUserInput(username, email, null, userId); // null cho pass khi update
 
-            // Thêm check độ dài password nếu có nhập
+
             if (password != null && !password.isEmpty() && password.length() < 6) {
                 errors.add("Mật khẩu mới phải có ít nhất 6 ký tự.");
             }
 
             if (!errors.isEmpty()) {
-                // *** THAY ĐỔI: Lưu lỗi vào session và redirect ***
                 session.setAttribute("validationErrors", errors);
-                // (Optional) Lưu dữ liệu form
                 User formData = new User(username, email, phoneNumber, "", type);
                 formData.setUserId(userId);
                 session.setAttribute("formData", formData);
 
                 response.sendRedirect(request.getContextPath() + "/admin/users?error=validationFailed&id=" + userId); // Redirect về list, có thể kèm ID
-                return; // Dừng xử lý
+                return;
             }
-            // --- Hết Validation ---
 
             User user = new User(username, email, phoneNumber, password, type);
             user.setUserId(userId);
@@ -282,12 +267,10 @@ public class UserServlet extends HttpServlet {
             e.printStackTrace();
             session.setAttribute("error", "Lỗi cơ sở dữ liệu khi cập nhật người dùng.");
         }
-        // Luôn redirect về list sau khi xử lý xong (kể cả lỗi DB)
         response.sendRedirect(request.getContextPath() + "/admin/users");
     }
 
 
-    // deleteUser: Giữ nguyên như trước (đã có session check + tự xóa)
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -316,29 +299,24 @@ public class UserServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/admin/users");
     }
 
-    // validateUserInput: Giữ nguyên như trước
     private List<String> validateUserInput(String username, String email, String password, int currentUserId) {
         List<String> errors = new ArrayList<>();
-        // Username
+
         if (username == null || username.trim().isEmpty()) { errors.add("Tên đăng nhập không được để trống."); }
         else if (username.length() < 3) { errors.add("Tên đăng nhập phải có ít nhất 3 ký tự."); }
         else if (currentUserId <= 0 && userRepository.isUsernameExists(username)) { errors.add("Tên đăng nhập '" + username + "' đã tồn tại.");}
-        // Email
+
         if (email == null || email.trim().isEmpty()) { errors.add("Email không được để trống."); }
         else if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { errors.add("Định dạng email không hợp lệ."); }
         else if (userRepository.isEmailExists(email, currentUserId)) { errors.add("Email '" + email + "' đã được sử dụng."); }
-        // Password (chỉ check độ dài nếu nhập, bắt buộc khi thêm mới)
+
         if (currentUserId <= 0) { // Thêm mới
             if (password == null || password.isEmpty()) { errors.add("Mật khẩu không được để trống khi thêm mới."); }
             else if (password.length() < 6) { errors.add("Mật khẩu phải có ít nhất 6 ký tự."); }
         }
-        // Lưu ý: Không check độ dài pass khi update ở đây nữa vì đã check trong updateUser
+
         return errors;
     }
 
 
-    @Override
-    public void destroy() {
-        // Dọn dẹp nếu cần
-    }
 }

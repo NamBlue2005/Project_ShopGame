@@ -63,7 +63,7 @@
       </button>
     </div>
     <div class="card-body">
-      <%-- Form Tìm kiếm --%>
+
       <form action="${pageContext.request.contextPath}/admin/users" method="GET" class="row g-3 mb-4 align-items-center border p-3 rounded bg-white">
         <input type="hidden" name="action" value="search">
         <div class="col-md-5">
@@ -128,7 +128,7 @@
                   <i class="fas fa-edit"></i>
                 </button>
                   <%-- Nút Xóa - Link trực tiếp với confirm JS --%>
-                  <%-- Không cho xóa chính mình (giả định userId lấy từ session là 'sessionUserId') --%>
+
                 <c:if test="${user.userId != sessionScope.userId}">
                   <a href="${pageContext.request.contextPath}/admin/users?action=delete&id=${user.userId}"
                      class="btn btn-sm btn-outline-danger"
@@ -169,23 +169,18 @@
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"> <%-- Ngăn đóng khi click ngoài hoặc bấm ESC --%>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form id="userForm" action="${pageContext.request.contextPath}/admin/users" method="POST"> <%-- Form bao ngoài cả modal-content để dễ submit --%>
+      <form id="userForm" action="${pageContext.request.contextPath}/admin/users" method="POST">
         <div class="modal-header">
           <h5 class="modal-title" id="userModalLabel">Thêm Người Dùng Mới</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <%-- Hidden fields để xác định action và user ID (khi sửa) --%>
+
           <input type="hidden" name="action" id="formAction" value="save">
           <input type="hidden" name="userId" id="formUserId" value="">
-
-          <%-- Lưu ý: Vùng hiển thị lỗi validation đã được dời ra ngoài modal (hiển thị sau khi redirect) --%>
-          <%-- <div id="formErrors" class="alert alert-danger d-none"></div> --%>
-
           <div class="mb-3 row">
             <label for="username" class="col-sm-3 col-form-label">Username <span class="text-danger">*</span></label>
             <div class="col-sm-9">
-              <%-- Quan trọng: Sử dụng giá trị từ 'formData' nếu có lỗi validation trước đó và server gửi lại --%>
               <input type="text" class="form-control" id="username" name="username" required minlength="3" value="<c:out value='${formData.username}'/>">
             </div>
           </div>
@@ -220,27 +215,21 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-          <%-- Nút submit form --%>
+
           <button type="submit" class="btn btn-primary" id="submitBtn">Thêm Người Dùng</button>
         </div>
-      </form> <%-- End Form --%>
+      </form>
     </div>
   </div>
-</div> <%-- End Modal --%>
+</div>
 
 
-<%-- ================================================== --%>
-<%-- JavaScript                                         --%>
-<%-- ================================================== --%>
-<%-- Bootstrap JS Bundle --%>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 
-<%-- JavaScript xử lý Modal --%>
+
 <script>
   const userModalEl = document.getElementById('userModal');
-  // Chỉ khởi tạo đối tượng Modal một lần
   const userModal = new bootstrap.Modal(userModalEl);
-
   const modalTitle = document.getElementById('userModalLabel');
   const userForm = document.getElementById('userForm');
   const formAction = document.getElementById('formAction');
@@ -248,75 +237,51 @@
   const passwordInput = document.getElementById('password');
   const passwordRequiredSpan = document.getElementById('passwordRequired');
   const submitBtn = document.getElementById('submitBtn');
-  // const formErrorsDiv = document.getElementById('formErrors'); // Không dùng nữa
-
-  // Lắng nghe sự kiện KHI MODAL SẮP ĐƯỢC HIỂN THỊ
   userModalEl.addEventListener('show.bs.modal', event => {
-    // Lấy button đã trigger modal
     const button = event.relatedTarget;
-    // Reset form về trạng thái mặc định
     userForm.reset();
-    formUserId.value = ''; // Xóa ID cũ
-    passwordInput.required = true; // Mặc định yêu cầu pass
+    formUserId.value = '';
+    passwordInput.required = true;
     passwordRequiredSpan.style.display = 'inline';
     passwordInput.placeholder = 'Nhập mật khẩu (ít nhất 6 ký tự)';
-
-    // Xóa các giá trị form cũ (nếu có từ lỗi validation trước đó)
-    // Đoạn này quan trọng nếu server KHÔNG gửi lại 'formData' hoặc bạn muốn form luôn mới khi mở
     document.getElementById('username').value = '';
     document.getElementById('email').value = '';
     document.getElementById('phoneNumber').value = '';
     document.getElementById('type').value = 'USER'; // Mặc định là User
 
-    // Xác định là Thêm hay Sửa
     if (button && button.id === 'addUserBtn') {
-      // ----- CHẾ ĐỘ THÊM MỚI -----
       modalTitle.textContent = 'Thêm Người Dùng Mới';
       formAction.value = 'save';
       submitBtn.textContent = 'Thêm Người Dùng';
     } else if (button && button.classList.contains('editUserBtn')) {
-      // ----- CHẾ ĐỘ SỬA -----
       const userId = button.getAttribute('data-userid');
       modalTitle.textContent = 'Chỉnh Sửa Người Dùng (ID: ' + userId + ')';
       formAction.value = 'update';
-      formUserId.value = userId; // Set userId cho form
+      formUserId.value = userId;
       submitBtn.textContent = 'Lưu Thay Đổi';
-
-      // Điền dữ liệu từ data-* attributes vào form
       document.getElementById('username').value = button.getAttribute('data-username');
       document.getElementById('email').value = button.getAttribute('data-email');
       document.getElementById('phoneNumber').value = button.getAttribute('data-phonenumber');
       document.getElementById('type').value = button.getAttribute('data-usertype');
-
-      // Mật khẩu không bắt buộc khi sửa
       passwordInput.required = false;
       passwordRequiredSpan.style.display = 'none'; // Ẩn dấu *
       passwordInput.placeholder = 'Để trống nếu không muốn thay đổi';
     }
-
-    // Nếu có dữ liệu form cũ từ session (sau lỗi validation), ưu tiên điền lại
-    // Lưu ý: Cần đảm bảo các trường trong 'formData' khớp với id/name của input
     <c:if test="${not empty formData}">
     console.log("Detected old form data from validation error.");
-    // Chỉ điền lại nếu là form tương ứng (check action hoặc ID nếu cần)
-    // Ví dụ: Nếu là lỗi update và ID khớp
+
     // if (formAction.value === 'update' && formUserId.value === '${formData.userId}') {
     document.getElementById('username').value = '<c:out value="${formData.username}"/>';
     document.getElementById('email').value = '<c:out value="${formData.email}"/>';
     document.getElementById('phoneNumber').value = '<c:out value="${formData.phoneNumber}"/>';
     document.getElementById('type').value = '${formData.type}';
-    // } else if (formAction.value === 'save') { // Nếu là lỗi add
-    // Tương tự, nhưng không cần check ID
-    // }
-    // Không điền lại password
     </c:if>
 
   });
 
-  // (Optional) Clear form data khi modal đóng hoàn toàn để tránh hiển thị lại nếu có lỗi JS
+
   userModalEl.addEventListener('hidden.bs.modal', event => {
-    // Có thể thêm logic reset form ở đây nếu cần, nhưng show.bs.modal đã làm rồi.
-    // console.log('Modal hidden');
+
   });
 
 </script>
