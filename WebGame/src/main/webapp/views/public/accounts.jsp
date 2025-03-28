@@ -7,12 +7,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shop Tài Khoản Game</title>
+  <title>Shop Tài Khoản Game Giá Rẻ</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   <style>
     body { background-color: #f8f9fa; display: flex; flex-direction: column; min-height: 100vh;}
-    .main-content { flex: 1; }
+    .main-content { flex: 1; padding-bottom: 3rem;}
     .card { transition: transform .2s ease-in-out, box-shadow .2s ease-in-out; border: none; }
     .card:hover { transform: translateY(-5px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15); }
     .card-img-top { aspect-ratio: 16 / 10; object-fit: cover; background-color: #eee; }
@@ -22,75 +22,81 @@
     .info-list i { color: #888; width: 1.1em; }
     footer { background-color: #343a40; padding: 1rem 0; }
     .navbar .nav-link.active { font-weight: bold; }
-    .login-prompt { border-left: 5px solid var(--bs-info); } /* Thêm đường viền trái cho đẹp */
+    .card-header-button { text-decoration: none; color: inherit; }
+    .card-header-button:hover { color: #0d6efd; }
+    .form-label-sm { font-size: 0.8rem; margin-bottom: 0.1rem; } /* Label nhỏ cho form search */
   </style>
 </head>
 <body>
+<jsp:include page="navbar_public.jsp"></jsp:include>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
-  <div class="container">
-    <a class="navbar-brand" href="${pageContext.request.contextPath}/">
-      <i class="fas fa-ghost me-2"></i>Acc Game Store
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#publicNavbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="publicNavbar">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link ${pageContext.request.servletPath == '/accounts' ? 'active' : ''}" href="${pageContext.request.contextPath}/accounts">
-            <i class="fas fa-server me-1"></i> Tài khoản Game
-          </a>
-        </li>
-        <li class="nav-item"><a class="nav-link" href="#"> <i class="fas fa-dollar-sign me-1"></i>Nạp tiền</a></li>
-      </ul>
-      <ul class="navbar-nav ms-auto">
-        <%-- Nút Login/User Info (Giữ nguyên) --%>
-        <c:choose>
-          <c:when test="${not empty sessionScope.username}">...</c:when> <%-- Phần user đã login giữ nguyên --%>
-          <c:otherwise>
-            <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/login"><i class="fas fa-sign-in-alt me-1"></i> Đăng nhập</a></li>
-            <li class="nav-item"><a class="btn btn-outline-warning btn-sm ms-2" href="${pageContext.request.contextPath}/register"><i class="fas fa-user-plus me-1"></i> Đăng ký</a></li>
-          </c:otherwise>
-        </c:choose>
-      </ul>
+<%-- Container chính --%>
+<div class="container mt-4 main-content">
+
+  <%-- Form Tìm Kiếm Công Khai - Card có thể thu gọn --%>
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-light">
+      <a class="card-header-button d-flex justify-content-between align-items-center"
+         data-bs-toggle="collapse" href="#collapsePublicSearch" role="button" aria-expanded="false" aria-controls="collapsePublicSearch">
+        <h5 class="mb-0"><i class="fas fa-search me-2"></i>Tìm kiếm Tài khoản</h5>
+        <i class="fas fa-chevron-down collapse-icon"></i>
+      </a>
+    </div>
+    <div class="collapse" id="collapsePublicSearch">
+      <div class="card-body p-3">
+        <form action="${pageContext.request.contextPath}/accounts" method="get">
+          <div class="row g-2 align-items-end"> <%-- align-items-end để nút thẳng hàng --%>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+              <label for="accountId" class="form-label form-label-sm">Mã số TK</label>
+              <%-- Hiển thị lại giá trị đã tìm từ request attribute 'searchAccountId' --%>
+              <input type="number" class="form-control form-control-sm" id="accountId" name="accountId" placeholder="Nhập ID" value="${searchAccountId}">
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+              <label for="rank" class="form-label form-label-sm">Rank</label>
+              <input type="text" class="form-control form-control-sm" id="rank" name="rank" placeholder="Nhập rank..." value="${searchRank}">
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+              <label for="minPrice" class="form-label form-label-sm">Giá từ (₫)</label>
+              <input type="number" min="0" step="1000" class="form-control form-control-sm" id="minPrice" name="minPrice" placeholder="VD: 50000" value="${searchMinPrice}">
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+              <label for="maxPrice" class="form-label form-label-sm">Giá đến (₫)</label>
+              <input type="number" min="0" step="1000" class="form-control form-control-sm" id="maxPrice" name="maxPrice" placeholder="VD: 200000" value="${searchMaxPrice}">
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+              <label for="minChampions" class="form-label form-label-sm">Tướng từ</label>
+              <input type="number" min="0" class="form-control form-control-sm" id="minChampions" name="minChampions" placeholder="Số tướng" value="${searchMinChampions}">
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+              <label for="minSkins" class="form-label form-label-sm">Skin từ</label>
+              <input type="number" min="0" class="form-control form-control-sm" id="minSkins" name="minSkins" placeholder="Số skin" value="${searchMinSkins}">
+            </div>
+
+            <div class="col-lg-auto col-md-12 ms-auto text-end mt-2 mt-lg-0">
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-search me-1"></i> Tìm
+              </button>
+              <a href="${pageContext.request.contextPath}/accounts" class="btn btn-outline-secondary btn-sm ms-1" title="Xóa bộ lọc">
+                <i class="fas fa-times"></i> Reset
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</nav>
 
-<%-- Nội dung chính --%>
-<div class="container mt-4 mb-5 main-content">
+  <h2 class="mb-4 text-center display-6">Danh Sách Tài Khoản</h2>
 
-  <%-- === KHU VỰC MỚI: THÔNG BÁO ĐĂNG NHẬP/ĐĂNG KÝ === --%>
-  <c:if test="${empty sessionScope.username}"> <%-- Chỉ hiển thị khi chưa đăng nhập --%>
-    <div class="alert alert-info d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4 shadow-sm login-prompt" role="alert">
-      <div class="text-center text-sm-start mb-2 mb-sm-0">
-        <i class="fas fa-info-circle me-2"></i>
-        Bạn cần <a href="${pageContext.request.contextPath}/login" class="alert-link fw-bold">Đăng nhập</a> hoặc <a href="${pageContext.request.contextPath}/register" class="alert-link fw-bold">Đăng ký</a> để có thể mua tài khoản!
-      </div>
-      <div class="flex-shrink-0">
-        <a href="${pageContext.request.contextPath}/login" class="btn btn-primary btn-sm me-2">
-          <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
-        </a>
-        <a href="${pageContext.request.contextPath}/register" class="btn btn-success btn-sm">
-          <i class="fas fa-user-plus me-1"></i> Đăng ký ngay
-        </a>
-      </div>
-    </div>
-  </c:if>
-  <%-- ================================================ --%>
-
-
-  <h2 class="mb-4 text-center display-6">Danh Sách Tài Khoản Game</h2>
-
+  <%-- Grid hiển thị card tài khoản --%>
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-    <%-- Phần hiển thị card tài khoản (Giữ nguyên) --%>
     <c:choose>
       <c:when test="${not empty accountList}">
         <c:forEach var="account" items="${accountList}">
           <div class="col">
             <div class="card h-100 shadow-sm overflow-hidden">
-              <img src="https://phunugioi.com/wp-content/uploads/2022/07/Anh-Lien-Quan-hinh-nen-Lien-Quan.jpg" class="card-img-top" alt="Ảnh đại diện tài khoản game">
+                <%-- !!! NHỚ THAY URL ẢNH NÀY !!! --%>
+              <img src="https://phunugioi.com/wp-content/uploads/2022/07/Anh-Lien-Quan-hinh-nen-Lien-Quan.jpg" class="card-img-top" alt="Tài khoản ${account.gameAccountId}">
               <div class="card-body d-flex flex-column">
                 <h5 class="card-title text-primary">Mã số: #${account.gameAccountId}</h5>
                 <ul class="list-group list-group-flush info-list mb-3 flex-grow-1">
@@ -103,7 +109,7 @@
                                         <span class="price-tag">
                                             <fmt:formatNumber value="${account.price}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                         </span>
-                      <%-- Nút Mua Ngay (Giữ nguyên logic) --%>
+                      <%-- Nút Mua Ngay với logic kiểm tra đăng nhập --%>
                     <c:choose>
                       <c:when test="${not empty sessionScope.username}">
                         <a href="${pageContext.request.contextPath}/purchase?accountId=${account.gameAccountId}" class="btn btn-sm btn-danger">
@@ -124,10 +130,10 @@
         </c:forEach>
       </c:when>
       <c:otherwise>
-        <%-- Thông báo không có tài khoản (Giữ nguyên) --%>
+        <%-- Hiển thị khi không có tài khoản nào --%>
         <div class="col-12">
           <div class="alert alert-secondary text-center mt-4" role="alert">
-            <i class="fas fa-info-circle me-2"></i> Hiện chưa có tài khoản nào được mở bán.
+            <i class="fas fa-info-circle me-2"></i> Không tìm thấy tài khoản nào phù hợp với tìm kiếm của bạn.
           </div>
         </div>
       </c:otherwise>
@@ -136,7 +142,7 @@
 
 </div> <%-- End container --%>
 
-<%-- Footer (Giữ nguyên) --%>
+<%-- Footer --%>
 <footer class="py-3 mt-auto bg-dark text-white-50">
   <div class="container text-center">
     <small>&copy; ${currentYear} Game Store. All Rights Reserved.</small>
@@ -145,5 +151,22 @@
 <c:set var="currentYear"><jsp:useBean id="date" class="java.util.Date" /><fmt:formatDate value="${date}" pattern="yyyy" /></c:set>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<%-- Script cho Collapse Search --%>
+<script>
+  const collapseElement = document.getElementById('collapsePublicSearch'); // Đổi ID nếu cần
+  const collapseIcon = document.querySelector('a[href="#collapsePublicSearch"] .collapse-icon');
+  if (collapseElement && collapseIcon) {
+    collapseElement.addEventListener('show.bs.collapse', () => { collapseIcon.classList.replace('fa-chevron-down','fa-chevron-up'); });
+    collapseElement.addEventListener('hide.bs.collapse', () => { collapseIcon.classList.replace('fa-chevron-up','fa-chevron-down'); });
+    // Kiểm tra nếu có tham số tìm kiếm trên URL khi tải trang thì mở sẵn form
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('rank') || urlParams.has('minPrice') || urlParams.has('accountId') /* Thêm các param khác nếu cần */) {
+      const bsCollapse = new bootstrap.Collapse(collapseElement, { toggle: false }); // Khởi tạo mà không toggle
+      bsCollapse.show(); // Mở nó ra
+      // Icon cũng cần đổi nếu mở sẵn
+      collapseIcon.classList.replace('fa-chevron-down','fa-chevron-up');
+    }
+  }
+</script>
 </body>
 </html>

@@ -172,4 +172,90 @@ public class GameAccountRepository {
         account.setPrice(rs.getDouble("price"));
         return account;
     }
+    //user
+    public List<GameAccount> findPublicAccounts(Integer accountId, String rank, Double minPrice, Double maxPrice, Integer minChampions, Integer minSkins) {
+        List<GameAccount> accounts = new ArrayList<>();
+        // Câu lệnh SQL cơ bản
+        StringBuilder sqlBuilder = new StringBuilder(
+                "SELECT game_account_id, game_rank, number_of_champions, number_of_skins, price " +
+                        "FROM GameAccounts WHERE status = 'ACTIVE'" // Luôn lọc status='ACTIVE'
+        );
+        List<Object> parameters = new ArrayList<>();
+
+        // --- Thêm điều kiện WHERE động ---
+        if (accountId != null && accountId > 0) {
+            sqlBuilder.append(" AND game_account_id = ?");
+            parameters.add(accountId);
+        }
+        if (rank != null && !rank.trim().isEmpty()) {
+            sqlBuilder.append(" AND game_rank LIKE ?");
+            parameters.add("%" + rank.trim() + "%");
+        }
+        if (minPrice != null && minPrice >= 0) {
+            sqlBuilder.append(" AND price >= ?");
+            parameters.add(minPrice);
+        }
+        if (maxPrice != null && maxPrice >= 0) {
+            sqlBuilder.append(" AND price <= ?");
+            parameters.add(maxPrice);
+        }
+        if (minChampions != null && minChampions >= 0) {
+            sqlBuilder.append(" AND number_of_champions >= ?");
+            parameters.add(minChampions);
+        }
+        if (minSkins != null && minSkins >= 0) {
+            sqlBuilder.append(" AND number_of_skins >= ?");
+            parameters.add(minSkins);
+        }
+
+        sqlBuilder.append(" ORDER BY price ASC");
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlBuilder.toString())) {
+
+            for (int i = 0; i < parameters.size(); i++) {
+                ps.setObject(i + 1, parameters.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    GameAccount account = new GameAccount();
+                    account.setGameAccountId(rs.getInt("game_account_id"));
+                    account.setGameRank(rs.getString("game_rank"));
+                    account.setNumberOfChampions(rs.getInt("number_of_champions"));
+                    account.setNumberOfSkins(rs.getInt("number_of_skins"));
+                    account.setPrice(rs.getDouble("price")); // Cần cột price và model đã cập nhật
+                    accounts.add(account);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Nên dùng logger
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return accounts;
+    }
+    public boolean updateGameAccountuser(GameAccount account) {
+        String sql = "UPDATE GameAccounts SET account_username = ?, account_password = ?, game_rank = ?, in_game_currency = ?, number_of_champions = ?, number_of_skins = ?, status = ?, price = ? WHERE game_account_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection(); // Tự lấy connection
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, account.getAccountUsername());
+            ps.setString(2, account.getAccountPassword());
+            ps.setString(3, account.getGameRank());
+            ps.setDouble(4, account.getInGameCurrency());
+            ps.setInt(5, account.getNumberOfChampions());
+            ps.setInt(6, account.getNumberOfSkins());
+            ps.setString(7, account.getStatus());
+            ps.setDouble(8, account.getPrice());
+            ps.setInt(9, account.getGameAccountId());
+
+            int affectedRows = ps.executeUpdate();
+            // Tự động commit nếu không có lỗi
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace(); // In lỗi
+            return false;
+        }
+    }
 }
