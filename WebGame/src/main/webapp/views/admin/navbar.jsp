@@ -1,9 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- ======================================================= --%>
-<%-- NAVBAR CHUẨN CHO TRANG ADMIN                          --%>
-<%-- ======================================================= --%>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm"> <%-- Thêm shadow-sm cho đổ bóng nhẹ --%>
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/admin/dashboard">
@@ -15,8 +13,6 @@
     <div class="collapse navbar-collapse" id="adminNavbar"> <%-- Đổi ID --%>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <%-- Đánh dấu active dựa trên servlet path --%>
-          <%-- Biến servletPath cần được đặt ở trang gọi include hoặc dùng trực tiếp pageContext --%>
           <c:set var="currentPath" value="${pageContext.request.servletPath}"/>
 
           <a class="nav-link <c:if test='${currentPath == "/admin/dashboard"}'>active</c:if>" href="${pageContext.request.contextPath}/admin/dashboard">
@@ -48,11 +44,11 @@
             <i class="fas fa-tags me-1"></i>Giảm giá
           </a>
         </li>
-        <%-- Thêm các link menu chính khác nếu cần --%>
+
       </ul>
 
       <ul class="navbar-nav">
-        <%-- Phần dropdown user --%>
+
         <c:if test="${not empty sessionScope.username}">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -83,4 +79,3 @@
     </div>
   </div>
 </nav>
-<%-- ======================================================= --%>

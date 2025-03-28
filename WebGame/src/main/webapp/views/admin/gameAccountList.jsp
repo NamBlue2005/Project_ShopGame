@@ -27,13 +27,9 @@
       vertical-align: middle;
       font-size: 0.9rem;
     }
-    /* Giữ lại style hover của bạn */
     .table-hover tbody tr:hover {
       background-color: rgba(74, 79, 235, 0.1);
     }
-    /* === XÓA BỎ PHẦN .thead-gemini Ở ĐÂY === */
-    /* .thead-gemini th { ... } */
-    /* ====================================== */
     .action-buttons .btn { margin-right: 0.25rem; }
     .card-header-button { text-decoration: none; color: inherit; }
     .card-header-button:hover { color: #0d6efd; }
@@ -43,12 +39,10 @@
 </head>
 <body>
 
-<%-- Include Navbar từ file riêng --%>
 <jsp:include page="navbar.jsp" />
 
 <div class="container-xl main-content">
 
-  <%-- Tiêu đề trang và nút Thêm (Giữ nguyên) --%>
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="mb-0">Quản lý Tài khoản Game</h2>
     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAccountModal">
@@ -56,7 +50,6 @@
     </button>
   </div>
 
-  <%-- Thông báo (Giữ nguyên) --%>
   <c:if test="${not empty message}">
     <div class="alert alert-${not empty messageType ? messageType : 'info'} alert-dismissible fade show" role="alert">
       <c:out value="${message}" />
@@ -81,7 +74,6 @@
     </div>
   </c:if>
 
-  <%-- Form tìm kiếm - Card có thể thu gọn (Giữ nguyên) --%>
   <div class="card shadow-sm mb-4">
     <div class="card-header bg-light">
       <a class="card-header-button d-flex justify-content-between align-items-center"
@@ -126,7 +118,6 @@
     </div>
   </div>
 
-  <%-- Bảng Danh Sách Tài Khoản --%>
   <div class="card shadow-sm">
     <div class="card-header bg-light">
       <h5 class="mb-0">Danh sách tài khoản</h5>
@@ -134,11 +125,9 @@
     <div class="card-body p-0">
       <div class="table-responsive">
         <table class="table table-striped table-hover table-sm mb-0">
-          <%-- === THAY ĐỔI CLASS HEADER Ở ĐÂY === --%>
           <thead class="table-dark">
-          <%-- ================================== --%>
           <tr>
-            <th>ID</th>
+            <th hidden="hidden">ID</th>
             <th>Username</th>
             <th>Rank</th>
             <th class="text-end">Tiền</th>
@@ -159,7 +148,7 @@
             <c:otherwise>
               <c:forEach var="account" items="${gameAccounts}">
                 <tr>
-                  <td><c:out value="${account.gameAccountId}" /></td>
+                  <td hidden="hidden"><c:out value="${account.gameAccountId}" /></td>
                   <td><c:out value="${account.accountUsername}" /></td>
                   <td><c:out value="${account.gameRank}" /></td>
                   <td class="text-end pe-3"><fmt:formatNumber value="${account.inGameCurrency}" type="number" minFractionDigits="0" maxFractionDigits="2"/></td>
@@ -208,26 +197,12 @@
     </div>
   </div>
 
-</div> <%-- End container --%>
+</div>
 
-
-<%-- Modals (Giữ nguyên) --%>
-<%-- Add Modal --%>
-<div class="modal fade" id="addAccountModal" ...> ... </div>
-<%-- Edit Modal --%>
-<div class="modal fade" id="editAccountModal" ...> ... </div>
-<%-- Delete Modal --%>
-<div class="modal fade" id="deleteConfirmModal" ...> ... </div>
-
-
-<%-- Footer (Giữ nguyên) --%>
 <footer class="py-3 mt-auto bg-light">...</footer>
 <c:set var="currentYear">...</c:set>
 
-<%-- Scripts (Giữ nguyên) --%>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script> /* Script Collapse */ ... </script>
-<script> /* Script Modals */ ... </script>
 
 </body>
 </html>

@@ -33,18 +33,14 @@
 </head>
 <body>
 
-<%-- Include Navbar từ file riêng --%>
 <jsp:include page="navbar.jsp" />
 
 <div class="container-xl main-content">
 
-    <%-- Tiêu đề trang --%>
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Quản lý Đơn hàng</h2>
-        <%-- Không có nút Thêm ở đây (theo code gốc) --%>
     </div>
 
-    <%-- Thông báo (Giữ nguyên logic, sửa messageType nếu cần) --%>
     <c:if test="${not empty message}">
         <div class="alert alert-${not empty messageType ? messageType : 'info'} alert-dismissible fade show" role="alert">
             <c:out value="${message}"/>
@@ -57,7 +53,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </c:if>
-    <%-- Lỗi validation (nếu có) --%>
     <c:if test="${not empty errors}">
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-circle me-2"></i><strong>Vui lòng kiểm tra lại thông tin nhập:</strong>
@@ -70,8 +65,6 @@
         </div>
     </c:if>
 
-
-    <%-- Form tìm kiếm - Card có thể thu gọn --%>
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
             <a class="card-header-button d-flex justify-content-between align-items-center"
@@ -117,10 +110,7 @@
                 </form>
             </div>
         </div>
-    </div> <%-- End Search Card --%>
-
-
-    <%-- Bảng hiển thị danh sách --%>
+    </div>
     <div class="card shadow-sm">
         <div class="card-header bg-light">
             <h5 class="mb-0">Danh sách Đơn hàng</h5>
@@ -175,15 +165,12 @@
                     </tbody>
                 </table>
             </div>
-        </div> <%-- End card-body --%>
-        <%-- Optional: Phân trang --%>
-        <%-- <div class="card-footer"> ... </div> --%>
-    </div> <%-- End Table Card --%>
+        </div>
+    </div>
 
-</div> <%-- End container --%>
+</div>
 
 
-<%-- Footer (Giữ nguyên) --%>
 <footer class="py-3 mt-auto bg-light">
     <div class="container text-center">
         <small class="text-muted">&copy; ${currentYear} Game Store Admin Panel. All Rights Reserved.</small>
@@ -192,7 +179,6 @@
 <c:set var="currentYear"><jsp:useBean id="date" class="java.util.Date" /><fmt:formatDate value="${date}" pattern="yyyy" /></c:set>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<%-- Script Collapse (Giữ nguyên) --%>
 <script>
     const collapseElement = document.getElementById('collapseSearch');
     const collapseIcon = document.querySelector('a[href="#collapseSearch"] .collapse-icon');

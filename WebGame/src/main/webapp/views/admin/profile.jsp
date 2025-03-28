@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Profile</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <%-- Thêm CSS tùy chỉnh nếu cần --%>
+
   <style>
     body { background-color: #f8f9fa; }
     .profile-container {
@@ -28,7 +28,7 @@
     .profile-field span {
       display: block;
       padding: 0.375rem 0.75rem;
-      background-color: #e9ecef; /* Màu nền nhẹ cho dễ nhìn */
+      background-color: #e9ecef;
       border: 1px solid #ced4da;
       border-radius: 0.25rem;
     }
@@ -100,7 +100,6 @@
         <span><c:out value="${userProfile.type}" /></span>
       </div>
 
-      <%-- Thêm nút Edit nếu muốn mở rộng chức năng --%>
       <div class="text-center mt-4">
         <a href="${pageContext.request.contextPath}/admin/edit-profile" class="btn btn-secondary">Edit Profile</a>
         <a href="${pageContext.request.contextPath}/admin/dashboard" class="btn btn-primary">Back to Dashboard</a>

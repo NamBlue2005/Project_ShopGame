@@ -360,10 +360,7 @@
     </div>
   </div>
 </div>
-<%-- ================================== END MODALS ================================== --%>
 
-
-<%-- Footer --%>
 <footer class="py-3 mt-auto">
   <div class="container text-center">
     <small class="text-muted">&copy; ${currentYear} Game Store Admin Panel. All Rights Reserved.</small>
@@ -372,7 +369,6 @@
 <c:set var="currentYear"><jsp:useBean id="date" class="java.util.Date" /><fmt:formatDate value="${date}" pattern="yyyy" /></c:set>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<%-- Script Collapse --%>
 <script>
   const collapseElement = document.getElementById('collapseSearch');
   const collapseIcon = document.querySelector('a[href="#collapseSearch"] .collapse-icon');
@@ -382,9 +378,7 @@
     if (collapseElement.classList.contains('show')) { collapseIcon.classList.replace('fa-chevron-down','fa-chevron-up'); }
   }
 </script>
-<%-- Script xử lý modal (Giữ nguyên logic JS của bạn) --%>
 <script>
-  //Edit modal
   const editDiscountModal = document.getElementById('editDiscountModal')
   if(editDiscountModal){
     editDiscountModal.addEventListener('show.bs.modal', event => {

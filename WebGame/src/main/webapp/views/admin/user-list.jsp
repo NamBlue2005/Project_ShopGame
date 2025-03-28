@@ -8,9 +8,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản Lý Người Dùng</title>
-  <%-- Bootstrap CSS --%>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  <%-- Font Awesome --%>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body { background-color: #f8f9fa; padding-top: 20px; }
@@ -29,8 +27,7 @@
 <div class="container-xl">
   <h2 class="mb-4 text-center">Quản Lý Người Dùng</h2>
 
-  <%-- Khu vực hiển thị thông báo --%>
-  <%-- Thông báo thành công (từ session message) --%>
+
   <c:if test="${not empty message}">
     <div class="alert alert-success alert-dismissible fade show" role="alert">
       <i class="fas fa-check-circle me-2"></i>${message}
@@ -38,7 +35,6 @@
     </div>
   </c:if>
 
-  <%-- Thông báo lỗi chung (từ session error) --%>
   <c:if test="${not empty error}">
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       <i class="fas fa-exclamation-triangle me-2"></i>${error}
@@ -46,7 +42,6 @@
     </div>
   </c:if>
 
-  <%-- Thông báo lỗi validation (từ request errors sau khi redirect từ POST lỗi) --%>
   <c:if test="${not empty errors}">
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
       <i class="fas fa-exclamation-circle me-2"></i><strong>Vui lòng kiểm tra lại thông tin nhập:</strong>
@@ -58,13 +53,11 @@
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   </c:if>
-  <%-- --- Hết khu vực thông báo --- --%>
 
 
-  <div class="card shadow-sm"> <%-- Thêm đổ bóng nhẹ --%>
+  <div class="card shadow-sm">
     <div class="card-header d-flex flex-wrap justify-content-between align-items-center bg-light"> <%-- Nền nhạt hơn --%>
       <h5 class="card-title mb-0 me-3">Danh sách người dùng</h5>
-      <%-- Nút Thêm User - Mở Modal --%>
       <button type="button" class="btn btn-success btn-sm mt-2 mt-md-0" data-bs-toggle="modal" data-bs-target="#userModal" id="addUserBtn">
         <i class="fas fa-plus me-1"></i> Thêm Người Dùng
       </button>
