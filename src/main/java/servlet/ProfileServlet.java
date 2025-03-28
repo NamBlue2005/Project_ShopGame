@@ -34,7 +34,6 @@ public class ProfileServlet extends HttpServlet {
                 int rowsUpdated = stmt.executeUpdate();
 
                 if (rowsUpdated > 0) {
-                    // Cập nhật lại session với thông tin mới
                     session.setAttribute("email", email);
                     session.setAttribute("phoneNumber", phoneNumber);
                     response.sendRedirect("profile.jsp?message=Update successful!");

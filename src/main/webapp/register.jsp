@@ -73,7 +73,7 @@
 <p class="text-center mt-3">Đã có tài khoản? <a href="login.jsp" class="btn btn-success">Đăng nhập ngay</a></p>
 
 <footer class="py-3 text-center mt-5">
-    &copy; 2025 ShopGame. All rights reserved.
+    &copy; 2025 Shop Liên Quân.
 </footer>
 </body>
 </html>

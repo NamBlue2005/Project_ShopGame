@@ -94,7 +94,7 @@
 </div>
 
 <footer>
-  <p>&copy; 2025 Shop Liên Quân. Tất cả quyền lợi được bảo lưu.</p>
+  <p>&copy; 2025 Shop Liên Quân.</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

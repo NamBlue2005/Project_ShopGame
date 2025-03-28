@@ -11,12 +11,10 @@ public class OrderController {
 
     private final IOrderService orderService;
 
-    // Constructor to initialize the service
     public OrderController() {
         this.orderService = new OrderService();
     }
 
-    // Handle request to add a new order
     public void addOrder(Order order) {
         try {
             orderService.addOrder(order);
@@ -27,7 +25,6 @@ public class OrderController {
         }
     }
 
-    // Handle request to update an existing order
     public void updateOrder(Order order) {
         try {
             orderService.updateOrder(order);
@@ -38,7 +35,6 @@ public class OrderController {
         }
     }
 
-    // Handle request to delete an order by its ID
     public void deleteOrder(int orderId) {
         try {
             orderService.deleteOrder(orderId);
@@ -49,7 +45,6 @@ public class OrderController {
         }
     }
 
-    // Handle request to get an order by its ID
     public Order getOrderById(int orderId) {
         try {
             return orderService.getOrderById(orderId);
@@ -60,7 +55,6 @@ public class OrderController {
         }
     }
 
-    // Handle request to get all orders
     public List<Order> getAllOrders() {
         try {
             return orderService.getAllOrders();
@@ -71,7 +65,6 @@ public class OrderController {
         }
     }
 
-    // Handle request to get all orders by user ID
     public List<Order> getOrdersByUserId(int userId) {
         try {
             return orderService.getOrdersByUserId(userId);

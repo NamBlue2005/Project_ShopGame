@@ -9,10 +9,8 @@ public class User {
     private String password;
     private String type;
 
-    // Constructor không tham số
     public User() {}
 
-    // Constructor dành cho đăng ký (không có userId)
     public User(String username, String email, String phoneNumber, String password, String type) {
         this.username = username;
         this.email = email;
@@ -21,7 +19,6 @@ public class User {
         this.type = type;
     }
 
-    // Constructor đầy đủ (có userId) - Dành cho khi lấy từ database
     public User(int userId, String username, String email, String phoneNumber, String password, String type) {
         this.userId = userId;
         this.username = username;
@@ -31,7 +28,6 @@ public class User {
         this.type = type;
     }
 
-    // Getters và Setters
     public int getUserId() {
         return userId;
     }

@@ -86,7 +86,7 @@
         </div>
     </div>
     <footer class="py-3 text-center mt-5">
-        &copy; 2025 Shop Liên Quân. All rights reserved.
+        &copy; 2025 Shop Liên Quân.
     </footer>
 </div>
 </body>

@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import connect.DatabaseConnection;
-import model.User; // Import model User
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -34,18 +33,18 @@ public class LoginServlet extends HttpServlet {
                             session.setAttribute("email", rs.getString("email"));
                             session.setAttribute("phoneNumber", rs.getString("phone_number"));
                             session.setAttribute("type", rs.getString("type"));
-                            response.sendRedirect("index.jsp"); // Đăng nhập thành công
+                            response.sendRedirect("index.jsp");
                         } else {
-                            response.sendRedirect("login.jsp?error=1"); // Sai tài khoản/mật khẩu
+                            response.sendRedirect("login.jsp?error=1");
                         }
                     }
                 }
             } else {
-                response.sendRedirect("login.jsp?error=2"); // Lỗi kết nối DB
+                response.sendRedirect("login.jsp?error=2");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("login.jsp?error=3"); // Lỗi hệ thống
+            response.sendRedirect("login.jsp?error=3");
         }
     }
 }

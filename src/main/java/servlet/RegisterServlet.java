@@ -1,6 +1,5 @@
 package servlet;
 
-import model.User;
 import connect.DatabaseConnection;
 import java.io.IOException;
 import java.sql.Connection;
