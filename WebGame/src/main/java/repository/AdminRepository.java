@@ -96,7 +96,7 @@ public class AdminRepository {
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    order.setOrderId(generatedKeys.getInt(1)); // Quan trọng: set ID vào object
+                    order.setOrderId(generatedKeys.getInt(1));
                 } else {
                     throw new SQLException("Creating order failed, no ID obtained.");
                 }
@@ -142,7 +142,7 @@ public class AdminRepository {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ORDER)) {
 
-            // Set parameters, handling null values
+          
             preparedStatement.setString(1, orderId != null ? "%" + orderId + "%" : "%");
             preparedStatement.setString(2, userId != null ? "%" + userId + "%" : "%");
             preparedStatement.setString(3, gameAccountId != null ? "%" + gameAccountId + "%" : "%");
@@ -165,7 +165,7 @@ public class AdminRepository {
 
                     Order order = new Order(fetchedUserId, fetchedGameAccountId, fetchedOrderDate, fetchedOrderStatus,
                             fetchedTotalAmount, fetchedPaymentMethod, fetchedDiscountId);
-                    order.setOrderId(fetchedOrderId); // Set the order ID
+                    order.setOrderId(fetchedOrderId); 
                     orders.add(order);
                 }
             }
@@ -189,13 +189,13 @@ public class AdminRepository {
                     user.setUsername(resultSet.getString("username"));
                     user.setEmail(resultSet.getString("email"));
                     user.setPhoneNumber(resultSet.getString("phone_number"));
-                    // Quan trọng: Không lấy mật khẩu trừ khi thực sự cần
+                  
                     user.setType(resultSet.getString("type"));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Có thể throw RuntimeException hoặc Exception cụ thể hơn
+           
             throw new RuntimeException("Error getting admin user by ID", e);
         }
         return user;
