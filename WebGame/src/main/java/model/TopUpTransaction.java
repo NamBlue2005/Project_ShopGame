@@ -6,7 +6,7 @@ public class TopUpTransaction {
 
     private int transactionId;
     private int userId;
-    private double amount; // double thay vì BigDecimal
+    private double amount; 
     private Timestamp transactionDate;
     private String paymentMethod;
     private String status;
@@ -70,7 +70,6 @@ public class TopUpTransaction {
         this.status = status;
     }
 
-    //toString
     @Override
     public String toString() {
         return "TopUpTransaction{" +
