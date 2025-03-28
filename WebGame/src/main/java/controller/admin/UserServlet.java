@@ -56,11 +56,11 @@ public class UserServlet extends HttpServlet {
             if ("validationFailed".equals(request.getParameter("error"))) {
                 List<String> validationErrors = (List<String>) session.getAttribute("validationErrors");
                 if(validationErrors != null) {
-                    request.setAttribute("errors", validationErrors); // Đặt lỗi validation vào request để JSP hiển thị
+                    request.setAttribute("errors", validationErrors); 
                     session.removeAttribute("validationErrors");
 
                 } else {
-                    request.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại."); // Lỗi chung nếu không thấy validationErrors
+                    request.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại.");
                 }
             } else {
                 request.setAttribute("error", error);
@@ -143,7 +143,7 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
         List<User> userList = userRepository.getAllUsers();
         request.setAttribute("userList", userList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/admin/user-list.jsp"); // Đổi tên JSP
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/admin/user-list.jsp"); 
         dispatcher.forward(request, response);
     }
 
@@ -158,26 +158,26 @@ public class UserServlet extends HttpServlet {
         request.setAttribute("searchTerm", searchTerm);
         request.setAttribute("searchType", searchType);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/admin/user-list.jsp"); // Đổi tên JSP
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/admin/user-list.jsp"); 
         dispatcher.forward(request, response);
     }
     private void insertUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        boolean success = false; // Biến để kiểm tra thành công cuối cùng
+        boolean success = false;
 
         try {
-            // 1. Lấy dữ liệu từ form
+          
             String username = request.getParameter("username");
             String email = request.getParameter("email");
             String phoneNumber = request.getParameter("phoneNumber");
             String password = request.getParameter("password");
             String type = request.getParameter("type");
 
-            // 2. Kiểm tra cơ bản (chỉ kiểm tra không rỗng các trường bắt buộc)
+        
             if (username == null || username.trim().isEmpty() ||
                     email == null || email.trim().isEmpty() ||
-                    password == null || password.isEmpty() || // Bỏ qua check độ dài ở đây
+                    password == null || password.isEmpty() || 
                     type == null || type.trim().isEmpty())
             {
                 session.setAttribute("error", "Vui lòng điền đầy đủ các trường bắt buộc (*).");
@@ -185,32 +185,32 @@ public class UserServlet extends HttpServlet {
                 return;
             }
 
-            // 3. Tạo đối tượng User
+           
             User newUser = new User(username.trim(), email.trim(), (phoneNumber != null ? phoneNumber.trim() : null), password, type);
 
-            System.out.println("Attempting to add user (simplified): " + newUser.getUsername()); // Thêm log cơ bản
-            success = userRepository.addUser(newUser); // Gọi repository
+            System.out.println("Attempting to add user (simplified): " + newUser.getUsername()); 
+            success = userRepository.addUser(newUser);
 
-            // 5. Đặt thông báo dựa trên kết quả trả về từ repository
+          
             if (success) {
                 System.out.println("User added successfully: " + newUser.getUsername());
                 session.setAttribute("message", "Thêm người dùng '" + username + "' thành công!");
             } else {
-                // Trường hợp repository trả về false mà không ném exception
+              
                 System.err.println("repository.addUser returned false for user: " + newUser.getUsername());
                 session.setAttribute("error", "Thêm người dùng thất bại. Kiểm tra lại thông tin hoặc liên hệ quản trị viên.");
             }
 
-        } catch (Exception e) { // Bắt tất cả Exception, chủ yếu là SQLException từ repository
-            // Nếu có lỗi (ví dụ: trùng username/email trong DB, lỗi kết nối,...)
+        } catch (Exception e) { 
+            
             System.err.println("!!! Error inserting user DB (simplified): " + e.getMessage());
-            e.printStackTrace(); // Rất quan trọng: In chi tiết lỗi ra console server
-            // Đặt thông báo lỗi chung chung hơn
+            e.printStackTrace(); 
+           
             session.setAttribute("error", "Lỗi khi thêm người dùng. Nguyên nhân có thể do trùng tên đăng nhập/email hoặc lỗi hệ thống.");
-            // Không set biến success = false ở đây vì nó đã mặc định là false
+            
         }
 
-        // 6. Luôn redirect về trang danh sách
+     
         response.sendRedirect(request.getContextPath() + "/admin/users");
     }
     private void updateUser(HttpServletRequest request, HttpServletResponse response)
@@ -227,7 +227,7 @@ public class UserServlet extends HttpServlet {
             String type = request.getParameter("type");
 
 
-            List<String> errors = validateUserInput(username, email, null, userId); // null cho pass khi update
+            List<String> errors = validateUserInput(username, email, null, userId); 
 
 
             if (password != null && !password.isEmpty() && password.length() < 6) {
@@ -240,7 +240,7 @@ public class UserServlet extends HttpServlet {
                 formData.setUserId(userId);
                 session.setAttribute("formData", formData);
 
-                response.sendRedirect(request.getContextPath() + "/admin/users?error=validationFailed&id=" + userId); // Redirect về list, có thể kèm ID
+                response.sendRedirect(request.getContextPath() + "/admin/users?error=validationFailed&id=" + userId); 
                 return;
             }
 
@@ -310,7 +310,7 @@ public class UserServlet extends HttpServlet {
         else if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { errors.add("Định dạng email không hợp lệ."); }
         else if (userRepository.isEmailExists(email, currentUserId)) { errors.add("Email '" + email + "' đã được sử dụng."); }
 
-        if (currentUserId <= 0) { // Thêm mới
+        if (currentUserId <= 0) { 
             if (password == null || password.isEmpty()) { errors.add("Mật khẩu không được để trống khi thêm mới."); }
             else if (password.length() < 6) { errors.add("Mật khẩu phải có ít nhất 6 ký tự."); }
         }
